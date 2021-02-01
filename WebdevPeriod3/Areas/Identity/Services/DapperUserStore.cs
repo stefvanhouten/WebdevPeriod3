@@ -34,36 +34,45 @@ namespace WebdevPeriod3.Areas.Identity.Services
         {
             throw new NotImplementedException();
         }
-
-        public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
+        
+        // HACK: Please remove this warning when we start implementing the methods below.
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        public async Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            // TODO: Fetch the user's normalized user name from the database.
+            return user.NormalizedUserName ?? throw new NotImplementedException();
         }
 
-        public Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
+        public async Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            // TODO: Fetch the user's password hash from the database.
+            return user.PasswordHash ?? throw new NotImplementedException();
         }
 
-        public Task<string> GetSecurityStampAsync(User user, CancellationToken cancellationToken)
+        public async Task<string> GetSecurityStampAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            // TODO: Fetch the user's security stamp from the database.
+            return user.SecurityStamp ?? throw new NotImplementedException();
         }
 
-        public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
+        public async Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            // TODO: Fetch the user's ID from the database.
+            return user.Id ?? throw new NotImplementedException();
         }
 
-        public Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
+        public async Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            // TODO: Fetch the user's username from the database.
+            return user.UserName ?? throw new NotImplementedException();
         }
 
-        public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
+        public async Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            // TODO: Fetch the user's password hash from the database and check whether it isn't null.
+            return user.PasswordHash != null ? true : throw new NotImplementedException();
         }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 
         public Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
         {
