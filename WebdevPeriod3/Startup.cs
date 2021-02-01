@@ -25,7 +25,13 @@ namespace WebdevPeriod3
 
             services.AddTransient<IUserCommandText, UserCommandText>();
             services.AddTransient<IUserRespoitory, UserRepository>();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddAuthentication("CookieAuth")
+                .AddCookie("CookieAuth", config =>
+                {
+                    config.Cookie.Name = "Grandmas.Cookie";
+                    config.LoginPath = "/"; //Set this to the actual login path
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +52,9 @@ namespace WebdevPeriod3
 
             app.UseRouting();
 
+            //Who are you?
+            app.UseAuthentication();
+            //Are you allowed?
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

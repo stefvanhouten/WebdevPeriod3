@@ -39,7 +39,7 @@ namespace WebdevPeriod3.Services
             await WithConnection(async conn =>
             {
                 await conn.ExecuteAsync(_commandText.AddUser,
-                    new { Username = entity.Username, Password = entity.Password });
+                    new {  entity.Username, entity.Password });
             });
         }
 
@@ -48,7 +48,7 @@ namespace WebdevPeriod3.Services
             await WithConnection(async conn =>
             {
                 await conn.ExecuteAsync(_commandText.UpdateUser,
-                    new { Username = entity.Username, Password = entity.Password, Id = id });
+                    new {  entity.Username, entity.Password, Id = id });
             });
         }
         public async Task RemoveUser(int id)

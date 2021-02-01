@@ -4,44 +4,68 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebdevPeriod3</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/app.min.css" />
 </head>
-<body>
+<body class="App flex flex-col h-screen">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebdevPeriod3</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - WebdevPeriod3 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </header>
+    <nav class="flex items-center justify-between flex-wrap bg-gray-700 h-auto p-6 w-full z-10 pin-t">
+        <div class="flex items-center flex-no-shrink text-white mr-6">
+            <a class="text-white no-underline hover:text-white hover:no-underline" href="#">
+                <img src="https://cdn0.iconfinder.com/data/icons/essentials-9/128/__Location-256.png" width="30" height="30" alt="logo" />
+            </a>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <div class="block lg:hidden">
+            <button id="nav-toggle" class="flex items-center px-3 py-2 border rounded text-grey border-grey-dark focus:outline-none hover:text-white hover:border-white">
+                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" /></svg>
+            </button>
+        </div>
+        <div class="w-full lg:flex-grow lg:flex lg:items-center lg:w-auto lg:block pt-6 lg:pt-0 lg:visible hidden">
+            <ul class="list-reset lg:flex justify-end flex-1 items-center">
+                <li class="dropdown relative inline-block text-white no-underline">
+                    <button href="#" class="inline-block p-3 text-gray-300 hover:text-gray-100 focus:outline-none" id="dropdown">Dropdown</button>
+                    <div class="bg-gray-700 hidden absolute p-1 shadow-lg z-1" id="dropdown-content">
+                        <a asp-area="" asp-controller="Home" asp-action="Privacy" class="inline-block p-3 text-gray-300 hover:text-gray-100">Privacy</a>
+                        <a asp-area="" asp-controller="Home" asp-action="Privacy" class="inline-block p-3 text-gray-300 hover:text-gray-100">Privacy</a>
+                        <a asp-area="" asp-controller="Home" asp-action="Privacy" class="inline-block p-3 text-gray-300 hover:text-gray-100">Privacy</a>
+                        <a asp-area="" asp-controller="Home" asp-action="Privacy" class="inline-block p-3 text-gray-300 hover:text-gray-100">Privacy</a>
+                    </div>
+                </li>
+
+                <li class="mr-1">
+                    <a asp-area="" asp-controller="Home" asp-action="Login" class="inline-block p-3 text-gray-300 hover:text-gray-100">Login</a>
+                </li>
+
+                <li class="mr-1">
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy" class="inline-block p-3 text-gray-300 hover:text-gray-100">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    @*<aside class="fixed min-w-max w-1/2 top-0 left-0 h-screen bg-gray-600 z-10 flex select-none lg:hidden" id="side-nav">
+        <div class="flex flex-col w-full">
+            <li class="w-full flex p-2 hover:bg-gray-500">
+                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="inline-block p-3 text-gray-300 hover:text-gray-100">
+                    <span class="flex flex-row ">
+                        <span class="text-gray-300 hover:text-gray-100">Login</span>
+                    </span>
+                </a>
+            </li>
+            <li class="w-full flex p-2 hover:bg-gray-500">
+                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="inline-block p-3 text-gray-300 hover:text-gray-100">
+                    <span class="flex flex-row ">
+                        <span class="text-gray-300 hover:text-gray-100">Logout</span>
+                    </span>
+                </a>
+            </li>
+        </div>
+    </aside>*@
+    <main role="main" class="flex flex-col h-full overflow-y-auto">
+        <div class="flex flex-col min-h-full h-full p-5">
+                @RenderBody()
+        </div>
+    </main>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>

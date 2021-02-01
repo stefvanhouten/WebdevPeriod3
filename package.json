@@ -1,0 +1,28 @@
+{
+  "name": "webdevperiod3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "postcss.config.js",
+  "dependencies": {
+    "autoprefixer": "^10.2.4",
+    "postcss-cli": "^8.3.1",
+    "postcss": "^8.2.4",
+    "tailwindcss": "^2.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "buildcss": "postcss WebdevPeriod3/wwwroot/css/app.css -o WebdevPeriod3/wwwroot/css/app.min.css"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stefvanhouten/WebdevPeriod3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stefvanhouten/WebdevPeriod3/issues"
+  },
+  "homepage": "https://github.com/stefvanhouten/WebdevPeriod3#readme"
+}

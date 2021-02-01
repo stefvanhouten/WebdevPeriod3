@@ -1,5 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebdevPeriod3.Entities;
@@ -32,9 +36,29 @@ namespace WebdevPeriod3.Controllers
             return View();
         }
 
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        //[Authorize]
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public IActionResult Authenticate()
+        {
+            var grandmaClaims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, "Stef"),
+                new Claim(ClaimTypes.Email, "stefvanhouten@gmail.com"),
+            };
+
+            var grandmaIdentity = new ClaimsIdentity(grandmaClaims, "Grandma Identity");
+            var userPrincipal = new ClaimsPrincipal(new[] { grandmaIdentity });
+            HttpContext.SignInAsync(userPrincipal);
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
