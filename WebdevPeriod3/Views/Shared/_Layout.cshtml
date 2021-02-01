@@ -43,10 +43,10 @@
             </ul>
         </div>
     </nav>
-    @*<aside class="fixed min-w-max w-1/2 top-0 left-0 h-screen bg-gray-600 z-10 flex select-none lg:hidden" id="side-nav">
+    <aside class="hidden fixed min-w-max w-1/2 top-0 left-0 h-screen bg-gray-600 z-10 flex select-none lg:hidden" id="side-nav">
         <div class="flex flex-col w-full">
             <li class="w-full flex p-2 hover:bg-gray-500">
-                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="inline-block p-3 text-gray-300 hover:text-gray-100">
+                <a asp-area="" asp-controller="Home" asp-action="Login" class="inline-block p-3 text-gray-300 hover:text-gray-100">
                     <span class="flex flex-row ">
                         <span class="text-gray-300 hover:text-gray-100">Login</span>
                     </span>
@@ -60,8 +60,8 @@
                 </a>
             </li>
         </div>
-    </aside>*@
-    <main role="main" class="flex flex-col h-full overflow-y-auto">
+    </aside>
+    <main role="main" class="flex flex-col h-full overflow-y-auto bg-gray-100">
         <div class="flex flex-col min-h-full h-full p-5">
                 @RenderBody()
         </div>

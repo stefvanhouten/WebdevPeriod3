@@ -36,7 +36,13 @@ namespace WebdevPeriod3.Controllers
             return View();
         }
 
+        //Should be moved to a auth controller
         public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult Register()
         {
             return View();
         }
