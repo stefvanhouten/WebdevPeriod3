@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace WebdevPeriod3.Areas.Identity.Entities
 {
-    public class User : IdentityUser<int> { }
+    public class User : IdentityUser<string> { }
 }
