@@ -25,7 +25,10 @@ namespace WebdevPeriod3
 
             services.AddTransient<IUserCommandText, UserCommandText>();
             services.AddTransient<IUserRespoitory, UserRepository>();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(mvcOptions =>
+            {
+                mvcOptions.EnableEndpointRouting = false;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,11 +51,12 @@ namespace WebdevPeriod3
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            app.UseMvc(routes =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute(
+                  name: "areas",
+                  template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
             });
         }
     }
