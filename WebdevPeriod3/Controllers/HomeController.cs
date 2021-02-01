@@ -30,8 +30,13 @@ namespace WebdevPeriod3.Controllers
             return Ok(users);
         }
 
-
         public IActionResult Index()
+        {
+            return View();
+        }
+
+
+        public IActionResult Dashboard()
         {
             return View();
         }
