@@ -8,6 +8,7 @@ using WebdevPeriod3.Areas.Identity.Entities;
 
 namespace WebdevPeriod3.Areas.Identity.Services
 {
+    // TODO: Decide whether or not to implement IQueryableUserStore<User>.
     public class DapperUserStore : IUserPasswordStore<User>, IUserSecurityStampStore<User>
     {
         public Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
