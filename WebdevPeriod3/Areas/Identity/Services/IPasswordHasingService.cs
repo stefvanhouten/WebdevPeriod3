@@ -1,5 +1,9 @@
-﻿namespace WebdevPeriod3.Areas.Identity.Services
+﻿using Microsoft.AspNetCore.Identity;
+using System;
+
+namespace WebdevPeriod3.Areas.Identity.Services
 {
+    [Obsolete("This interface will be replaced with the built-in version.")]
     /// <summary>
     /// Defines common methods for password hashing services
     /// </summary>
