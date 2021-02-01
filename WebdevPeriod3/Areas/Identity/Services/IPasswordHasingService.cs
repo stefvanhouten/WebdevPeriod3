@@ -1,5 +1,8 @@
 ﻿namespace WebdevPeriod3.Areas.Identity.Services
 {
+    /// <summary>
+    /// Defines common methods for password hashing services
+    /// </summary>
     public interface IPasswordHasingService
     {
         /// <summary>
