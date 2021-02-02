@@ -24,7 +24,6 @@ namespace WebdevPeriod3
             services.AddTransient<IProductRepository, ProductRepository>();
 
             services.AddTransient<IUserCommandText, UserCommandText>();
-            services.AddTransient<IUserRespoitory, UserRepository>();
             services.AddControllersWithViews(mvcOptions =>
             {
                 mvcOptions.EnableEndpointRouting = false;

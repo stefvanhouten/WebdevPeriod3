@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Entities;
 using WebdevPeriod3.Interfaces;
 using WebdevPeriod3.Models;
@@ -11,21 +12,11 @@ namespace WebdevPeriod3.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IUserRespoitory _userRepository;
 
-        public HomeController(ILogger<HomeController> logger, IUserRespoitory productRepository)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _userRepository = productRepository;
-            this.GetAll();
         }
-
-        public async Task<ActionResult<User>> GetAll()
-        {
-            var users = await _userRepository.GetAllUsers();
-            return Ok(users);
-        }
-
 
         public IActionResult Index()
         {
