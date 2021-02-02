@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Services;
+using WebdevPeriod3.Utilities;
 
 namespace WebdevPeriod3.Areas.Identity.Services
 {
@@ -29,37 +30,16 @@ namespace WebdevPeriod3.Areas.Identity.Services
                     "SELECT * FROM users WHERE NormalizedUserName=@normalizedUserName",
                     new { normalizedUserName }));
 
-        public Task<T> GetFieldById<T>(string id, Expression<Func<User, T>> expression)
-        {
-            var memberName = ExtractMemberName(expression);
-
-            return WithConnection(
+        public Task<T> GetFieldById<T>(string id, Expression<Func<User, T>> expression) =>
+            WithConnection(
                 connection => connection.QuerySingleOrDefaultAsync<T>(
-                    $"SELECT {memberName} FROM users WHERE Id=@id;",
+                    $"{expression.ToSelectClause()} WHERE Id=@id;",
                     new { id }));
-        }
 
-        public Task<T> GetFieldByNormalizedUserName<T>(string normalizedUserName, Expression<Func<User, T>> expression)
-        {
-            var memberName = ExtractMemberName(expression);
-
-            return WithConnection(
+        public Task<T> GetFieldByNormalizedUserName<T>(string normalizedUserName, Expression<Func<User, T>> expression) =>
+            WithConnection(
                 connection => connection.QuerySingleOrDefaultAsync<T>(
-                    $"SELECT {memberName} FROM users WHERE NormalizedUserName=@normalizedUserName;",
+                    $"{expression.ToSelectClause()} WHERE NormalizedUserName=@normalizedUserName;",
                     new { normalizedUserName }));
-        }
-
-        private string ExtractMemberName<T>(Expression<Func<User, T>> expression)
-        {
-            if (expression.Body.NodeType != ExpressionType.MemberAccess)
-                throw new ArgumentException("The provided expression has to be a member access expression.");
-
-            var body = expression.Body as MemberExpression;
-
-            if (body.Expression.Type != typeof(User))
-                throw new ArgumentException("The provided expression has to be performed on a user.");
-
-            return body.Member.Name;
-        }
     }
 }
