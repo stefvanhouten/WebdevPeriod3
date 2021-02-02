@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebdevPeriod3.Areas.Identity.Entities;
@@ -21,9 +19,11 @@ namespace WebdevPeriod3.Areas.Identity.Services
             _userRepository = userRepository;
         }
 
-        public Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _userRepository.Add(user);
+
+            return IdentityResult.Success;
         }
 
         public Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
@@ -31,11 +31,8 @@ namespace WebdevPeriod3.Areas.Identity.Services
             throw new NotImplementedException();
         }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-        
+        public void Dispose() { }
+
         // TODO: Add support for cancellation tokens
         public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken) =>
             _userRepository.FindById(userId);
@@ -61,29 +58,40 @@ namespace WebdevPeriod3.Areas.Identity.Services
         public async Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken) =>
             user.PasswordHash != null || await _userRepository.GetFieldById(user.Id, user => user.PasswordHash) == null;
 
-        public Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
+        public async Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _userRepository.UpdateFieldById(user.Id, user => user.NormalizedUserName, normalizedName);
+
+            user.NormalizedUserName = normalizedName;
         }
 
-        public Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
+        public async Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _userRepository.UpdateFieldById(user.Id, user => user.PasswordHash, passwordHash);
+
+            user.PasswordHash = passwordHash;
         }
 
-        public Task SetSecurityStampAsync(User user, string stamp, CancellationToken cancellationToken)
+        public async Task SetSecurityStampAsync(User user, string stamp, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _userRepository.UpdateFieldById(user.Id, user => user.SecurityStamp, stamp);
+
+            user.SecurityStamp = stamp;
         }
 
-        public Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
+        public async Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _userRepository.UpdateFieldById(user.Id, user => user.UserName, userName);
+
+            user.UserName = userName;
         }
 
-        public Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _userRepository.Update(user);
+
+            // TODO: Decide what result we should return
+            return IdentityResult.Success;
         }
     }
 }

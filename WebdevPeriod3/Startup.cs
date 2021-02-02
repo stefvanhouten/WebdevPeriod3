@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Areas.Identity.Services;
 using WebdevPeriod3.Interfaces;
 using WebdevPeriod3.Services;
@@ -27,6 +29,10 @@ namespace WebdevPeriod3
             services.AddTransient<IProductRepository, ProductRepository>();
 
             services.AddTransient<UserRepository>();
+
+            services.AddScoped<IUserStore<User>, DapperUserStore>();
+
+            services.AddIdentityCore<User>();
 
             services.AddControllersWithViews(mvcOptions =>
             {
@@ -71,6 +77,10 @@ namespace WebdevPeriod3
                 using var scope = app.ApplicationServices.CreateScope();
 
                 scope.ServiceProvider.GetRequiredService<MigrationService>().UpdateDatabase();
+
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+
+                userManager.CreateAsync(new User("thomasio101"), "Test1234!").Wait();
             };
         }
     }
