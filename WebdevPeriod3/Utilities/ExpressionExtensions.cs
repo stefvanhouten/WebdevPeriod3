@@ -47,5 +47,18 @@ namespace WebdevPeriod3.Utilities
         /// <returns>A select clause</returns>
         public static string ToSelectClause<T, U>(this Expression<Func<T, U>> expression, string tableName) =>
             $"SELECT {expression.ExtractMemberName()} FROM {tableName}";
+        public static string ToUpdateClause<T>(this Expression<Action<T>> expression, dynamic values) =>
+            ToUpdateClause(expression, typeof(T).Name.ToLower() + 's', values);
+
+        public static string ToUpdateClause<T>(this Expression<Action<T>> expression, string tableName, dynamic values)
+        {
+            if (expression is MemberAssignment memberAssignment && memberAssignment.Member.ReflectedType == typeof(T) && memberAssignment.Expression is ConstantExpression constantExpression)
+            {
+                values.setValue = constantExpression.Value;
+
+                return $"UPDATE {tableName} SET {memberAssignment.Member.Name}=@setValue";
+            }
+            else throw new ArgumentException("The expression has to be a member assignment.");
+        }
     }
 }

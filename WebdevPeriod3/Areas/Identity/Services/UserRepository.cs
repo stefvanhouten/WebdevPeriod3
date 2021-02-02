@@ -41,5 +41,14 @@ namespace WebdevPeriod3.Areas.Identity.Services
                 connection => connection.QuerySingleOrDefaultAsync<T>(
                     $"{expression.ToSelectClause()} WHERE NormalizedUserName=@normalizedUserName;",
                     new { normalizedUserName }));
+
+        public async Task UpdateFieldById(string id, Expression<Action<User>> expression)
+        {
+            object values = new { id };
+
+            await WithConnection(
+                connection => connection.ExecuteAsync(
+                    $"{expression.ToUpdateClause(values)} WHERE Id=@id;", values));
+        }
     }
 }
