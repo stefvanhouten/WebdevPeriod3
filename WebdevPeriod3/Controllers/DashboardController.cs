@@ -38,7 +38,7 @@ namespace WebdevPeriod3.Controllers
         {
             //TODO: Split into seperate controller?
             List<BlogImage> images = new List<BlogImage>();
-            for(int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 BlogImage image = new BlogImage()
                 {
@@ -57,5 +57,11 @@ namespace WebdevPeriod3.Controllers
             };
             return View(viewModel);
         }
+
+        public IActionResult Profile()
+        {
+            return View();
+        }
+
     }
 }
