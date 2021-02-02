@@ -40,7 +40,7 @@ namespace WebdevPeriod3.Controllers
             if (idValues.Count > 0) {
                 return Ok(new
                 {
-                    value = await _userRepository.GetFieldByUserName(idValues[0], user => user.AccessFailedCount)
+                    value = await _userRepository.GetFieldByNormalizedUserName(idValues[0], user => user.AccessFailedCount)
                 });
             }
 
