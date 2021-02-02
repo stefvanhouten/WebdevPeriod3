@@ -82,7 +82,5 @@ namespace WebdevPeriod3.Services
                 throw new Exception(string.Format("{0}.WithConnection() experienced a SQL exception (not a timeout)", GetType().FullName), ex);
             }
         }
-
-
     }
 }
