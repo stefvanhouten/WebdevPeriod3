@@ -42,13 +42,11 @@ namespace WebdevPeriod3.Areas.Identity.Services
                     $"{expression.ToSelectClause()} WHERE NormalizedUserName=@normalizedUserName;",
                     new { normalizedUserName }));
 
-        public async Task UpdateFieldById(string id, Expression<Action<User>> expression)
+        public async Task UpdateFieldById<T>(string id, Expression<Func<User, T>> expression, T value)
         {
-            object values = new { id };
-
             await WithConnection(
                 connection => connection.ExecuteAsync(
-                    $"{expression.ToUpdateClause(values)} WHERE Id=@id;", values));
+                    $"{expression.ToUpdateClause(nameof(value))} WHERE Id=@id;", new { id, value }));
         }
     }
 }

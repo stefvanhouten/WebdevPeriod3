@@ -38,6 +38,8 @@ namespace WebdevPeriod3.Controllers
             Request.Query.TryGetValue("id", out var idValues);
 
             if (idValues.Count > 0) {
+                await _userRepository.UpdateFieldById(idValues[0], user => user.PhoneNumber, "0511461556");
+
                 return Ok(new
                 {
                     value = await _userRepository.GetFieldByNormalizedUserName(idValues[0], user => user.AccessFailedCount)

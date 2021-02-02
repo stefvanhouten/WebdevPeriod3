@@ -44,21 +44,32 @@ namespace WebdevPeriod3.Utilities
         /// <typeparam name="T">The entity's type</typeparam>
         /// <typeparam name="U">The property's type</typeparam>
         /// <param name="expression">The expression to convert to a select clause</param>
+        /// <param name="tableName">The table's name</param>
         /// <returns>A select clause</returns>
         public static string ToSelectClause<T, U>(this Expression<Func<T, U>> expression, string tableName) =>
             $"SELECT {expression.ExtractMemberName()} FROM {tableName}";
-        public static string ToUpdateClause<T>(this Expression<Action<T>> expression, dynamic values) =>
-            ToUpdateClause(expression, typeof(T).Name.ToLower() + 's', values);
 
-        public static string ToUpdateClause<T>(this Expression<Action<T>> expression, string tableName, dynamic values)
-        {
-            if (expression is MemberAssignment memberAssignment && memberAssignment.Member.ReflectedType == typeof(T) && memberAssignment.Expression is ConstantExpression constantExpression)
-            {
-                values.setValue = constantExpression.Value;
+        /// <summary>
+        /// Converts an expression to an update clause for a table with the name of <typeparamref name="T"/> + 's'
+        /// </summary>
+        /// <typeparam name="T">The entity's type</typeparam>
+        /// <typeparam name="U">The property's type</typeparam>
+        /// <param name="expression">The expression to convert to an update clause</param>
+        /// <param name="valueName">The name of the template value</param>
+        /// <returns>An update clause</returns>
+        public static string ToUpdateClause<T, U>(this Expression<Func<T, U>> expression, string valueName) =>
+            ToUpdateClause(expression, typeof(T).Name.ToLower() + 's', valueName);
 
-                return $"UPDATE {tableName} SET {memberAssignment.Member.Name}=@setValue";
-            }
-            else throw new ArgumentException("The expression has to be a member assignment.");
-        }
+        /// <summary>
+        /// Converts an expression to an update clause for a table with the name <paramref name="tableName"/>
+        /// </summary>
+        /// <typeparam name="T">The entity's type</typeparam>
+        /// <typeparam name="U">The property's type</typeparam>
+        /// <param name="expression">The expression to convert to an update clause</param>
+        /// <param name="tableName">The table's name</param>
+        /// <param name="valueName">The name of the template value</param>
+        /// <returns>An update clause</returns>
+        public static string ToUpdateClause<T, U>(this Expression<Func<T, U>> expression, string tableName, string valueName) =>
+            $"UPDATE {tableName} SET {expression.ExtractMemberName()}=@{valueName}";
     }
 }
