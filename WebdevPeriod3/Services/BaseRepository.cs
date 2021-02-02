@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,7 +16,7 @@ namespace WebdevPeriod3.Services
         protected BaseRepository(IConfiguration configuration)
         {
             _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("UserConnection");
+            _connectionString = _configuration.GetConnectionString("Master");
         }
 
         // use for buffered queries that return a type
@@ -23,7 +24,7 @@ namespace WebdevPeriod3.Services
         {
             try
             {
-                await using (var connection = new SqlConnection(_connectionString))
+                await using (var connection = new MySqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
                     return await getData(connection);
@@ -31,11 +32,11 @@ namespace WebdevPeriod3.Services
             }
             catch (TimeoutException ex)
             {
-                throw new Exception(String.Format("{0}.WithConnection() experienced a SQL timeout", GetType().FullName), ex);
+                throw new Exception(string.Format("{0}.WithConnection() experienced a SQL timeout", GetType().FullName), ex);
             }
             catch (SqlException ex)
             {
-                throw new Exception(String.Format("{0}.WithConnection() experienced a SQL exception (not a timeout)", GetType().FullName), ex);
+                throw new Exception(string.Format("{0}.WithConnection() experienced a SQL exception (not a timeout)", GetType().FullName), ex);
             }
         }
 
@@ -44,7 +45,7 @@ namespace WebdevPeriod3.Services
         {
             try
             {
-                await using (var connection = new SqlConnection(_connectionString))
+                await using (var connection = new MySqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
                     await getData(connection);
@@ -52,11 +53,11 @@ namespace WebdevPeriod3.Services
             }
             catch (TimeoutException ex)
             {
-                throw new Exception(String.Format("{0}.WithConnection() experienced a SQL timeout", GetType().FullName), ex);
+                throw new Exception(string.Format("{0}.WithConnection() experienced a SQL timeout", GetType().FullName), ex);
             }
             catch (SqlException ex)
             {
-                throw new Exception(String.Format("{0}.WithConnection() experienced a SQL exception (not a timeout)", GetType().FullName), ex);
+                throw new Exception(string.Format("{0}.WithConnection() experienced a SQL exception (not a timeout)", GetType().FullName), ex);
             }
         }
 
@@ -74,11 +75,11 @@ namespace WebdevPeriod3.Services
             }
             catch (TimeoutException ex)
             {
-                throw new Exception(String.Format("{0}.WithConnection() experienced a SQL timeout", GetType().FullName), ex);
+                throw new Exception(string.Format("{0}.WithConnection() experienced a SQL timeout", GetType().FullName), ex);
             }
             catch (SqlException ex)
             {
-                throw new Exception(String.Format("{0}.WithConnection() experienced a SQL exception (not a timeout)", GetType().FullName), ex);
+                throw new Exception(string.Format("{0}.WithConnection() experienced a SQL exception (not a timeout)", GetType().FullName), ex);
             }
         }
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebdevPeriod3.Areas.Identity.Services;
 using WebdevPeriod3.Interfaces;
 using WebdevPeriod3.Services;
 
@@ -25,7 +26,8 @@ namespace WebdevPeriod3
             services.AddTransient<IProductCommandText, ProductCommandText>();
             services.AddTransient<IProductRepository, ProductRepository>();
 
-            services.AddTransient<IUserCommandText, UserCommandText>();
+            services.AddTransient<UserRepository>();
+
             services.AddControllersWithViews(mvcOptions =>
             {
                 mvcOptions.EnableEndpointRouting = false;
@@ -54,6 +56,10 @@ namespace WebdevPeriod3
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                    name: "root",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+
                 routes.MapRoute(
                   name: "areas",
                   template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"

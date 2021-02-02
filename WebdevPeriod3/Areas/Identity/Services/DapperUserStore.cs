@@ -14,6 +14,13 @@ namespace WebdevPeriod3.Areas.Identity.Services
     /// </summary>
     public class DapperUserStore : IUserPasswordStore<User>, IUserSecurityStampStore<User>
     {
+        private readonly UserRepository _userRepository;
+
+        public DapperUserStore(UserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
         public Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
@@ -28,55 +35,31 @@ namespace WebdevPeriod3.Areas.Identity.Services
         {
             throw new NotImplementedException();
         }
-
-        public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
         
-        // HACK: Please remove this warning when we start implementing the methods below.
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
-        {
-            // TODO: Fetch the user's normalized user name from the database.
-            return user.NormalizedUserName ?? throw new NotImplementedException();
-        }
+        // TODO: Add support for cancellation tokens
+        public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken) =>
+            _userRepository.FindById(userId);
 
-        public async Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
-        {
-            // TODO: Fetch the user's password hash from the database.
-            return user.PasswordHash ?? throw new NotImplementedException();
-        }
+        public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken) =>
+            _userRepository.FindByNormalizedUserName(normalizedUserName);
 
-        public async Task<string> GetSecurityStampAsync(User user, CancellationToken cancellationToken)
-        {
-            // TODO: Fetch the user's security stamp from the database.
-            return user.SecurityStamp ?? throw new NotImplementedException();
-        }
+        public async Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken) =>
+            user.NormalizedUserName ?? await _userRepository.GetFieldById(user.Id, user => user.NormalizedUserName);
 
-        public async Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
-        {
-            // TODO: Fetch the user's ID from the database.
-            return user.Id ?? throw new NotImplementedException();
-        }
+        public async Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken) =>
+            user.PasswordHash ?? await _userRepository.GetFieldById(user.Id, user => user.PasswordHash);
 
-        public async Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
-        {
-            // TODO: Fetch the user's username from the database.
-            return user.UserName ?? throw new NotImplementedException();
-        }
+        public async Task<string> GetSecurityStampAsync(User user, CancellationToken cancellationToken) =>
+            user.SecurityStamp ?? await _userRepository.GetFieldById(user.Id, user => user.SecurityStamp);
 
-        public async Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
-        {
-            // TODO: Fetch the user's password hash from the database and check whether it isn't null.
-            return user.PasswordHash != null ? true : throw new NotImplementedException();
-        }
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        public async Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken) =>
+            user.Id ?? await _userRepository.GetFieldByNormalizedUserName(user.NormalizedUserName, user => user.Id);
+
+        public async Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken) =>
+            user.UserName ?? await _userRepository.GetFieldById(user.Id, user => user.UserName);
+
+        public async Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken) =>
+            user.PasswordHash != null || await _userRepository.GetFieldById(user.Id, user => user.PasswordHash) == null;
 
         public Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
         {

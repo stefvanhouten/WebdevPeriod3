@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebdevPeriod3.Areas.Identity.Entities;
+using WebdevPeriod3.Areas.Identity.Services;
 using WebdevPeriod3.Entities;
 using WebdevPeriod3.Interfaces;
 using WebdevPeriod3.Models;
@@ -12,15 +13,38 @@ namespace WebdevPeriod3.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly UserRepository _userRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, UserRepository userRepository)
         {
             _logger = logger;
+            _userRepository = userRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            Request.Query.TryGetValue("userName", out var userNameValues);
+
+            if (userNameValues.Count == 1)
+            {
+                var user = await _userRepository.FindByNormalizedUserName(userNameValues[0]);
+
+                if (user != null)
+                    return Ok(user);
+                else
+                    return NotFound();
+            }
+
+            Request.Query.TryGetValue("id", out var idValues);
+
+            if (idValues.Count > 0) {
+                return Ok(new
+                {
+                    value = await _userRepository.GetFieldByUserName(idValues[0], user => user.AccessFailedCount)
+                });
+            }
+
+            return Ok(await _userRepository.GetAll());
         }
 
         public IActionResult Privacy()
