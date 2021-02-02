@@ -13,7 +13,7 @@ namespace WebdevPeriod3.Migrations
         {
             Create.Table("Users")
                 .WithColumn("AccessFailedCount").AsInt32().WithDefaultValue(0)
-                .WithColumn("ConcurrencyStamp").AsString().NotNullable()
+                .WithColumn("ConcurrencyStamp").AsString()
                 .WithColumn("Email").AsString().Nullable()
                 .WithColumn("EmailConfirmed").AsBoolean().WithDefaultValue(false)
                 .WithColumn("Id").AsString().PrimaryKey()
