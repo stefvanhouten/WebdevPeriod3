@@ -36,7 +36,7 @@ namespace WebdevPeriod3.Utilities
         /// <param name="expression">The expression to convert to a select clause</param>
         /// <returns>A select clause</returns>
         public static string ToSelectClause<T, U>(this Expression<Func<T, U>> expression) =>
-            expression.ToSelectClause(typeof(T).Name.ToLower());
+            expression.ToSelectClause(typeof(T).Name.ToLower() + 's');
 
         /// <summary>
         /// Converts an expression to a select clause for a table with the name <paramref name="tableName"/>
