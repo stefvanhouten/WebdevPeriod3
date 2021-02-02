@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebdevPeriod3.Entities;
 using WebdevPeriod3.Interfaces;
+using WebdevPeriod3.ViewModels;
 using WebdevPeriod3.Models;
 
 namespace WebdevPeriod3.Controllers
@@ -16,6 +17,7 @@ namespace WebdevPeriod3.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUserRespoitory _userRepository;
+        public string test { get; set; } = "hello world";
 
         public HomeController(ILogger<HomeController> logger, IUserRespoitory productRepository)
         {

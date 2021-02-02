@@ -1,6 +1,6 @@
 using System;
 
-namespace WebdevPeriod3.Models
+namespace WebdevPeriod3.ViewModels
 {
     public class ErrorViewModel
     {
