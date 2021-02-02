@@ -36,7 +36,26 @@ namespace WebdevPeriod3.Controllers
 
         public IActionResult ViewPost(int id)
         {
-            return View();
+            //TODO: Split into seperate controller?
+            List<BlogImage> images = new List<BlogImage>();
+            for(int i = 0; i < 4; i++)
+            {
+                BlogImage image = new BlogImage()
+                {
+                    ID = i,
+                    Title = "Image name",
+                    WebshopUrl = new List<string>() { "www.kaasislekker.nl" },
+                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+                    ImagePath = "~/images/another-robot.png"
+                };
+                images.Add(image);
+            }
+
+            PostViewModel viewModel = new PostViewModel()
+            {
+                Images = images
+            };
+            return View(viewModel);
         }
     }
 }
