@@ -20,6 +20,8 @@ namespace WebdevPeriod3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMigrationRunner();
+
             services.AddTransient<IProductCommandText, ProductCommandText>();
             services.AddTransient<IProductRepository, ProductRepository>();
 
@@ -57,6 +59,13 @@ namespace WebdevPeriod3
                   template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
             });
+
+            // Update the database to the latest schema
+            {
+                using var scope = app.ApplicationServices.CreateScope();
+
+                scope.ServiceProvider.GetRequiredService<MigrationService>().UpdateDatabase();
+            };
         }
     }
 }
