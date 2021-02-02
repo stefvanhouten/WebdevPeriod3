@@ -6,48 +6,86 @@
     <title>@ViewData["Title"] - WebdevPeriod3</title>
     <link rel="stylesheet" href="~/css/app.min.css" />
 </head>
-<body class="App flex flex-col h-screen">
-    <header>
-        @Html.Partial("_NavBar")
-    </header>
-    <aside class="hidden fixed min-w-max w-1/2 top-0 left-0 h-screen bg-yellow-800 z-10 flex select-none lg:hidden" id="side-nav">
-        <div class="flex flex-col w-full">
-            <li class="w-full flex p-2 hover:bg-yellow-700">
-                <a asp-area="" asp-controller="Home" asp-action="Login" class="inline-block w-full p-3 text-gray-300 hover:text-gray-100">
-                    <span class="flex flex-row ">
-                        <img class="mr-2 rounded-full" src="https://avatars2.githubusercontent.com/u/24622175?s=60&amp;v=4" alt="needle icon" height="20" width="20"></img>
-                        <span class="text-gray-300 hover:text-gray-100">Username</span>
-                    </span>
-                </a>
-            </li>
-            <li class="w-full flex p-2 hover:bg-yellow-700">
-                <a asp-area="" asp-controller="Dashboard" asp-action="Index" class="inline-block w-full p-3 text-gray-300 hover:text-gray-100">
-                    <span class="flex flex-row ">
-                        <span class="text-gray-300 hover:text-gray-100">Dashboard</span>
-                    </span>
-                </a>
-            </li>
-            <li class="w-full flex p-2 hover:bg-yellow-700">
-                <a asp-area="" asp-controller="Home" asp-action="Login" class="inline-block w-full p-3 text-gray-300 hover:text-gray-100">
-                    <span class="flex flex-row">
-                        <span class="text-gray-300 hover:text-gray-100">Login</span>
-                    </span>
-                </a>
-            </li>
-            <li class="w-full flex p-2 hover:bg-yellow-700">
-                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="inline-block w-full p-3 text-gray-300 hover:text-gray-100">
-                    <span class="flex flex-row ">
-                        <span class="text-gray-300 hover:text-gray-100">Logout</span>
-                    </span>
-                </a>
-            </li>
-        </div>
-    </aside>
-    <main role="main" class="flex flex-col h-full overflow-y-auto bg-gray-100">
-        <div class="flex flex-col min-h-full h-full p-5">
+<body class="h-screen">
+    <div class="flex flex-col min-h-full">
+        <header>
+            @Html.Partial("_NavBar")
+        </header>
+        <aside class="hidden fixed min-w-max w-1/2 top-0 left-0 h-screen bg-yellow-800 z-10 flex select-none lg:hidden" id="side-nav">
+            <div class="flex flex-col w-full">
+                <li class="w-full flex p-2 hover:bg-yellow-700">
+                    <a asp-area="" asp-controller="Home" asp-action="Login" class="inline-block w-full p-3 text-gray-300 hover:text-gray-100">
+                        <span class="flex flex-row ">
+                            <img class="mr-2 rounded-full" src="https://avatars2.githubusercontent.com/u/24622175?s=60&amp;v=4" alt="needle icon" height="20" width="20"></img>
+                            <span class="text-gray-300 hover:text-gray-100">Username</span>
+                        </span>
+                    </a>
+                </li>
+                <li class="w-full flex p-2 hover:bg-yellow-700">
+                    <a asp-area="" asp-controller="Dashboard" asp-action="Index" class="inline-block w-full p-3 text-gray-300 hover:text-gray-100">
+                        <span class="flex flex-row ">
+                            <span class="text-gray-300 hover:text-gray-100">Dashboard</span>
+                        </span>
+                    </a>
+                </li>
+                <li class="w-full flex p-2 hover:bg-yellow-700">
+                    <a asp-area="" asp-controller="Home" asp-action="Login" class="inline-block w-full p-3 text-gray-300 hover:text-gray-100">
+                        <span class="flex flex-row">
+                            <span class="text-gray-300 hover:text-gray-100">Login</span>
+                        </span>
+                    </a>
+                </li>
+                <li class="w-full flex p-2 hover:bg-yellow-700">
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy" class="inline-block w-full p-3 text-gray-300 hover:text-gray-100">
+                        <span class="flex flex-row ">
+                            <span class="text-gray-300 hover:text-gray-100">Logout</span>
+                        </span>
+                    </a>
+                </li>
+            </div>
+        </aside>
+        <main role="main" class="flex flex-1 overflow-y-auto bg-gray-100">
+            <div class="flex flex-col flex-1 mb-auto">
                 @RenderBody()
-        </div>
-    </main>
+            </div>
+        </main>
+        <footer class="footer bg-white relative pt-1 border-b-2 border-blue-700">
+            <div class="container mx-auto px-6">
+
+                <div class="sm:flex sm:mt-8">
+                    <div class="mt-8 sm:mt-0 sm:w-full sm:px-8 flex flex-col md:flex-row justify-between">
+                        <div class="flex flex-col">
+                            <span class="font-bold text-gray-700 uppercase mb-2">Footer header 1</span>
+                            <span class="my-2"><a href="#" class="text-blue-700  text-md hover:text-blue-500">link 1</a></span>
+                            <span class="my-2"><a href="#" class="text-blue-700  text-md hover:text-blue-500">link 1</a></span>
+                            <span class="my-2"><a href="#" class="text-blue-700  text-md hover:text-blue-500">link 1</a></span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-bold text-gray-700 uppercase mt-4 md:mt-0 mb-2">Footer header 2</span>
+                            <span class="my-2"><a href="#" class="text-blue-700 text-md hover:text-blue-500">link 1</a></span>
+                            <span class="my-2"><a href="#" class="text-blue-700  text-md hover:text-blue-500">link 1</a></span>
+                            <span class="my-2"><a href="#" class="text-blue-700 text-md hover:text-blue-500">link 1</a></span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-bold text-gray-700 uppercase mt-4 md:mt-0 mb-2">Footer header 3</span>
+                            <span class="my-2"><a href="#" class="text-blue-700  text-md hover:text-blue-500">link 1</a></span>
+                            <span class="my-2"><a href="#" class="text-blue-700  text-md hover:text-blue-500">link 1</a></span>
+                            <span class="my-2"><a href="#" class="text-blue-700  text-md hover:text-blue-500">link 1</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container mx-auto px-6">
+                <div class="mt-16 border-t-2 border-gray-300 flex flex-col items-center">
+                    <div class="sm:w-2/3 text-center py-6">
+                        <p class="text-sm text-blue-700 font-bold mb-2">
+                            © 2020 by Pavlove BIOKOU
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>

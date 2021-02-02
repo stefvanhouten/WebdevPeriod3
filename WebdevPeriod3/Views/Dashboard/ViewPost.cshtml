@@ -3,19 +3,78 @@
     ViewData["Title"] = "Post";
 }
 
-<div class="flex flex-col">
+<div class="flex flex-col p-5">
     <div class="px-3">
-        <h1 class="text-3xl">Post title</h1>
+        <h1 class="text-3xl">Hello world</h1>
         <p class="mt-2 text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
         <p class="mt-2 text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </div>
 </div>
-<div class="flex flex-col mt-3">
+<div class="flex flex-col p-5 mt-3">
     <h1 class="text-2xl px-3">Parts</h1>
     <div class="flex flex-wrap">
         @foreach (BlogImage image in Model.Images)
         {
             @Html.Partial("_BlogImage", image);
         }
+    </div>
+</div>
+<div class="flex flex-col bg-gray-200 p-5">
+    <div class="mb-2 border-b-2 border-gray-100">
+        <div class="inline-block text-gray-400">
+            <p class="inline-block text-sm">John doe</p>
+            <span class="ml-1 text-xs">02-02-2021</span>
+
+        </div>
+        <div class="flex flex-col text-gray-700">
+            <p>test</p>
+            <p>test</p>
+        </div>
+        <div class="flex flex-row">
+            <button class="text-blue-500 text-xs mr-2 bg-blue-200 p-1 rounded-md">Reply</button>
+            <button class="text-red-500 text-xs mr-2 bg-red-200 p-1 rounded-md">Report</button>
+        </div>
+        <div class="m-2">
+            <div class="inline-block text-gray-400">
+                <p class="inline-block text-sm">Jane doe</p>
+                <span class="ml-1 text-xs">02-02-2021</span>
+            </div>
+            <div class="flex flex-col text-gray-700">
+                <p>test</p>
+                <p>test</p>
+            </div>
+            <div class="flex flex-row">
+                <button class="text-blue-500 text-xs mr-2 bg-blue-200 p-1 rounded-md">Reply</button>
+                <button class="text-red-500 text-xs mr-2 bg-red-200 p-1 rounded-md">Report</button>
+            </div>
+            <div class="m-2">
+                <div class="inline-block text-gray-400">
+                    <p class="inline-block text-sm">John doe</p>
+                    <span class="ml-1 text-xs">02-02-2021</span>
+                </div>
+                <div class="flex flex-col text-gray-700">
+                    <p>test</p>
+                    <p>test</p>
+                </div>
+                <div class="flex flex-row">
+                    <button class="text-blue-500 text-xs mr-2 bg-blue-200 p-1 rounded-md">Reply</button>
+                    <button class="text-red-500 text-xs mr-2 bg-red-200 p-1 rounded-md">Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mb-2 border-b-2 border-gray-100">
+        <div class="inline-block text-gray-400">
+            <p class="inline-block text-sm">Username</p>
+            <span class="ml-1 text-xs">02-02-2021</span>
+        </div>
+        <div class="flex flex-col text-gray-700">
+            <p>test</p>
+            <p>test</p>
+        </div>
+        <div class="flex flex-row">
+            <button class="text-blue-500 text-xs mr-2 bg-blue-200 p-1 rounded-md">Reply</button>
+            <button class="text-red-500 text-xs mr-2 bg-red-200 p-1 rounded-md">Report</button>
+        </div>
     </div>
 </div>
