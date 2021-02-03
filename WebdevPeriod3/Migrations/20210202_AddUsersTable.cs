@@ -31,7 +31,7 @@ namespace WebdevPeriod3.Migrations
 
         public override void Down()
         {
-            Delete.Table("User");
+            Delete.Table("Users");
         }
     }
 }

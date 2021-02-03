@@ -28,6 +28,12 @@ namespace WebdevPeriod3.Utilities
             return body.Member.Name;
         }
 
+        public static string ToColumnName<T, U>(this Expression<Func<T, U>> expression) =>
+            expression.ToColumnName(typeof(T).ToTableName());
+
+        public static string ToColumnName<T, U>(this Expression<Func<T, U>> expression, string tableName) =>
+            $"{tableName}.{expression.ExtractMemberName()}";
+
         /// <summary>
         /// Converts an expression to a select clause for a table with the name of <typeparamref name="E"/> + 's'
         /// </summary>
@@ -35,8 +41,12 @@ namespace WebdevPeriod3.Utilities
         /// <typeparam name="V">The property's type</typeparam>
         /// <param name="expression">The expression to convert to a select clause</param>
         /// <returns>A select clause</returns>
-        public static string ToSelectClause<E, V>(this Expression<Func<E, V>> expression) =>
-            expression.ToSelectClause(typeof(E).ToTableName());
+        public static string ToSelectClause<E, V>(this Expression<Func<E, V>> expression, string leftTableName = null)
+        {
+            var rightTableName = typeof(E).ToTableName();
+
+            return expression.ToSelectClause(leftTableName ?? rightTableName, rightTableName);
+        }
 
         /// <summary>
         /// Converts an expression to a select clause for a table with the name <paramref name="tableName"/>
@@ -46,8 +56,8 @@ namespace WebdevPeriod3.Utilities
         /// <param name="expression">The expression to convert to a select clause</param>
         /// <param name="tableName">The table's name</param>
         /// <returns>A select clause</returns>
-        public static string ToSelectClause<E, V>(this Expression<Func<E, V>> expression, string tableName) =>
-            $"SELECT {expression.ExtractMemberName()} FROM {tableName}";
+        public static string ToSelectClause<E, V>(this Expression<Func<E, V>> expression, string leftTableName, string rightTableName = null) =>
+            $"SELECT {rightTableName ?? leftTableName}.{expression.ExtractMemberName()} FROM {leftTableName}";
 
         /// <summary>
         /// Converts an expression to an update clause for a table with the name of <typeparamref name="E"/> + 's'
@@ -70,7 +80,7 @@ namespace WebdevPeriod3.Utilities
         /// <param name="valueName">The name of the template value</param>
         /// <returns>An update clause</returns>
         public static string ToUpdateClause<E, V>(this Expression<Func<E, V>> expression, string tableName, string valueName) =>
-            $"UPDATE {tableName} SET {expression.ExtractMemberName()}=@{valueName}";
+            $"UPDATE {tableName} SET {expression.ToColumnName()}=@{valueName}";
 
         /// <summary>
         /// Converts an expression to a DELETE query for a table with the lower-case name of <typeparamref name="E"/> + 's'
@@ -104,10 +114,58 @@ namespace WebdevPeriod3.Utilities
         /// <typeparam name="K">The key's type</typeparam>
         /// <param name="expression">A member access expression to select the column which is used in the WHERE clause</param>
         /// <param name="valueName">The name of the template value for the WHERE clause</param>
-        /// <returns>Returns a WHERE clause such as "WHERE X=@Y"</returns>
+        /// <returns>A WHERE clause such as "WHERE X=@Y"</returns>
         public static string ToWhereClause<E, K>(this Expression<Func<E, K>> expression, string valueName)
         {
-            return SqlHelper.CreateWhereClause(expression.ExtractMemberName(), valueName);
+            return expression.ToWhereClause(typeof(E).ToTableName(), valueName);
         }
+
+        public static string ToWhereClause<E, K>(this Expression<Func<E, K>> expression, string tableName, string valueName)
+        {
+            return SqlHelper.CreateWhereClause($"{expression.ToColumnName(tableName)}", valueName);
+        }
+
+        /// <summary>
+        /// Converts an expression to a key value pair
+        /// </summary>
+        /// <typeparam name="E">The entity's type</typeparam>
+        /// <typeparam name="V">The value's type</typeparam>
+        /// <param name="expression">A member access expression to select the column</param>
+        /// <param name="valueName">The template value's name</param>
+        /// <returns>A key value pair such as "X=@Y"</returns>
+        public static string ToKeyValuePair<E, V>(this Expression<Func<E, V>> expression, string valueName) =>
+            expression.ToKeyValuePair(typeof(E).ToTableName(), valueName);
+
+        /// <summary>
+        /// Converts an expression to a key value pair
+        /// </summary>
+        /// <typeparam name="E">The entity's type</typeparam>
+        /// <typeparam name="V">The value's type</typeparam>
+        /// <param name="expression">A member access expression to select the column</param>
+        /// <param name="tableName">The table's name</param>
+        /// <param name="valueName">The template value's name</param>
+        /// <returns>A key value pair such as "X=@Y"</returns>
+        public static string ToKeyValuePair<E, V>(this Expression<Func<E, V>> expression, string tableName, string valueName) =>
+            $"{expression.ToColumnName(tableName)}=@{valueName}";
+
+        /// <summary>
+        /// Converts an expression to a JOIN clause
+        /// </summary>
+        /// <typeparam name="EL">The left table's entity type</typeparam>
+        /// <typeparam name="ER">The right table's entity type</typeparam>
+        /// <typeparam name="K"></typeparam>
+        /// <param name="leftExpression"></param>
+        /// <param name="rightExpression"></param>
+        /// <param name="leftTableName">The table's name, auto-generated if null</param>
+        /// <param name="rightTableName">The table's name, auto-generated if null</param>
+        /// <returns>A JOIN clause</returns>
+        public static string ToJoinClause<EL, ER, K>(
+            this Expression<Func<EL, K>> leftExpression,
+            Expression<Func<ER, K>> rightExpression,
+            string leftTableName = null,
+            string rightTableName = null) =>
+            $"JOIN {rightTableName ?? typeof(ER).ToTableName()} " +
+            $"ON {leftTableName ?? typeof(EL).ToTableName()}.{leftExpression.ExtractMemberName()} " +
+            $"= {rightTableName ?? typeof(ER).ToTableName()}.{rightExpression.ExtractMemberName()}";
     }
 }
