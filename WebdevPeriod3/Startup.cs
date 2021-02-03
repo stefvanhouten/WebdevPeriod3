@@ -27,7 +27,7 @@ namespace WebdevPeriod3
 
             services.AddTransient<IProductCommandText, ProductCommandText>();
             services.AddTransient<IProductRepository, ProductRepository>();
-
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddTransient<UserRepository>();
 
             services.AddScoped<IUserStore<User>, DapperUserStore>();
