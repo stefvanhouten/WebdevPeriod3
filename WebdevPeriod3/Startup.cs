@@ -25,8 +25,6 @@ namespace WebdevPeriod3
         {
             services.AddMigrationRunner(Configuration.GetConnectionString("Master"));
 
-            services.AddTransient<IProductCommandText, ProductCommandText>();
-            services.AddTransient<IProductRepository, ProductRepository>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddTransient<UserRepository>();
 
