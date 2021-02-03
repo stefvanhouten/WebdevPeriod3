@@ -40,7 +40,6 @@ namespace WebdevPeriod3.Areas.Identity.Services
             throw new NotImplementedException();
         }
 
-        // TODO: Decide whether or not to implement IQueryableUserStore<User>.
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<string> GetNormalizedRoleNameAsync(Role role, CancellationToken cancellationToken)
         {
