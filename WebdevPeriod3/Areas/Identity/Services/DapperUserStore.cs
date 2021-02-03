@@ -26,9 +26,11 @@ namespace WebdevPeriod3.Areas.Identity.Services
             return IdentityResult.Success;
         }
 
-        public Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _userRepository.Delete(user);
+
+            return IdentityResult.Success;
         }
 
         public void Dispose() { }

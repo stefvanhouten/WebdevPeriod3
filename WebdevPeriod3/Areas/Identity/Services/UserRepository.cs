@@ -67,5 +67,11 @@ namespace WebdevPeriod3.Areas.Identity.Services
                 connection => connection.ExecuteAsync(
                     user.ToUpdateQuery(user => user.Id), user));
         }
+
+        public async Task Delete(User user)
+        {
+            await WithConnection(
+                connection => connection.ExecuteAsync(user.ToDeleteQuery(user => user.Id), user));
+        }
     }
 }
