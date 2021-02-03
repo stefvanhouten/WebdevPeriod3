@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace WebdevPeriod3.Models
+﻿namespace WebdevPeriod3.Models
 {
-    //TODO: DTO or not? If not move to entities
+    //TODO: classes in this folder are just used for mocking data on the views
     public class RobotPost
     {
         public int ID { get; set; }
