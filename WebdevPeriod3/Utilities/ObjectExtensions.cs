@@ -18,7 +18,7 @@ namespace WebdevPeriod3.Utilities
             );
 
         public static string ToUpdateQuery<T>(this T values, Expression<Func<T, object>> keyExpression) =>
-            values.ToUpdateQuery(typeof(T).Name.ToLower() + 's', keyExpression);
+            values.ToUpdateQuery(typeof(T).ToTableName(), keyExpression);
 
         public static string ToUpdateQuery<T>(this T values, string tableName, Expression<Func<T, object>> keyExpression)
         {
@@ -28,7 +28,7 @@ namespace WebdevPeriod3.Utilities
         }
 
         public static string ToInsertQuery<T>(this T values) =>
-            values.ToInsertQuery(typeof(T).Name.ToLower() + 's');
+            values.ToInsertQuery(typeof(T).ToTableName());
 
         public static string ToInsertQuery<T>(this T values, string tableName) =>
             $"INSERT INTO {tableName} SET {values.ToKeyGroup()};";

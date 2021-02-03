@@ -36,7 +36,7 @@ namespace WebdevPeriod3.Utilities
         /// <param name="expression">The expression to convert to a select clause</param>
         /// <returns>A select clause</returns>
         public static string ToSelectClause<T, U>(this Expression<Func<T, U>> expression) =>
-            expression.ToSelectClause(typeof(T).Name.ToLower() + 's');
+            expression.ToSelectClause(typeof(T).ToTableName());
 
         /// <summary>
         /// Converts an expression to a select clause for a table with the name <paramref name="tableName"/>
@@ -58,7 +58,7 @@ namespace WebdevPeriod3.Utilities
         /// <param name="valueName">The name of the template value</param>
         /// <returns>An update clause</returns>
         public static string ToUpdateClause<T, U>(this Expression<Func<T, U>> expression, string valueName) =>
-            ToUpdateClause(expression, typeof(T).Name.ToLower() + 's', valueName);
+            expression.ToUpdateClause(typeof(T).ToTableName(), valueName);
 
         /// <summary>
         /// Converts an expression to an update clause for a table with the name <paramref name="tableName"/>
