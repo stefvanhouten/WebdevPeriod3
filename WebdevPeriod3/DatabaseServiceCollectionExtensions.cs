@@ -19,7 +19,7 @@ namespace WebdevPeriod3
                     // Add SQLite support to FluentMigrator
                     .AddMySql5()
                     // Set the connection string
-                    .WithGlobalConnectionString("Server=127.0.0.1;Database=mydb;Uid=root;Pwd=BadPasswordFrom2020!")
+                    .WithGlobalConnectionString("Server=127.0.0.1;Database=mydb;Uid=stef;Pwd=password")
                     // Define the assembly containing the migrations
                     .ScanIn(typeof(AddUsersTable).Assembly).For.Migrations())
                 // Enable logging to console in the FluentMigrator way

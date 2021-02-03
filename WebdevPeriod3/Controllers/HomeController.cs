@@ -24,13 +24,7 @@ namespace WebdevPeriod3.Controllers
             _userRepository = userRepository;
         }
 
-        public async Task<ActionResult<User>> GetAll()
-        {
-            var users = await _userRepository.GetAllUsers();
-            return Ok(users);
-        }
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             return View();
         }
