@@ -13,6 +13,9 @@ namespace WebdevPeriod3.Areas.Identity.Services
 {
     public class UserRepository : BaseRepository
     {
+        private static readonly Expression<Func<User, string>> ID_SELECTOR = user => user.Id;
+        private static readonly Expression<Func<User, string>> NORMALIZED_USERNAME_SELECTOR = user => user.NormalizedUserName;
+
         public UserRepository(IConfiguration configuration) : base(configuration) { }
 
         public async Task Add(User user)
@@ -26,52 +29,51 @@ namespace WebdevPeriod3.Areas.Identity.Services
         }
 
         public Task<IEnumerable<User>> GetAll() =>
-            WithConnection(connection => connection.QueryAsync<User>("SELECT * FROM users;"));
+            WithConnection(connection => connection.QueryAsync<User>(typeof(User).ToSelectQuery()));
 
         public Task<User> FindById(string id) =>
             WithConnection(
                 connection => connection.QueryFirstOrDefaultAsync<User>(
-                    "SELECT * FROM users WHERE Id=@id",
+                    SqlHelper.CreateSelectWhereQuery(ID_SELECTOR, nameof(id)),
                     new { id }));
 
         public Task<User> FindByNormalizedUserName(string normalizedUserName) =>
             WithConnection(
                 connection => connection.QueryFirstOrDefaultAsync<User>(
-                    "SELECT * FROM users WHERE NormalizedUserName=@normalizedUserName",
+                    SqlHelper.CreateSelectWhereQuery(NORMALIZED_USERNAME_SELECTOR, nameof(normalizedUserName)),
                     new { normalizedUserName }));
 
         public Task<T> GetFieldById<T>(string id, Expression<Func<User, T>> expression) =>
             WithConnection(
                 connection => connection.ExecuteScalarAsync<T>(
-                    $"{expression.ToSelectClause()} WHERE Id=@id;",
+                    SqlHelper.CreateSelectWhereQuery(expression, ID_SELECTOR, nameof(id)),
                     new { id }));
 
         public Task<T> GetFieldByNormalizedUserName<T>(string normalizedUserName, Expression<Func<User, T>> expression) =>
             WithConnection(
                 connection => connection.ExecuteScalarAsync<T>(
-                    $"{expression.ToSelectClause()} WHERE NormalizedUserName=@normalizedUserName;",
+                    SqlHelper.CreateSelectWhereQuery(expression, NORMALIZED_USERNAME_SELECTOR, nameof(normalizedUserName)),
                     new { normalizedUserName }));
 
         public async Task UpdateFieldById<T>(string id, Expression<Func<User, T>> expression, T value)
         {
-            var values = new { id, value };
-
             await WithConnection(
                 connection => connection.ExecuteAsync(
-                    $"{expression.ToUpdateClause(nameof(value))} WHERE Id=@id;", new { id, value }));
+                    $"{expression.ToUpdateClause(nameof(value))} {ID_SELECTOR.ToWhereClause(nameof(id))};",
+                    new { id, value }));
         }
 
         public async Task Update(User user)
         {
             await WithConnection(
                 connection => connection.ExecuteAsync(
-                    user.ToUpdateQuery(user => user.Id), user));
+                    user.ToUpdateQuery(ID_SELECTOR), user));
         }
 
         public async Task Delete(User user)
         {
             await WithConnection(
-                connection => connection.ExecuteAsync(user.ToDeleteQuery(user => user.Id), user));
+                connection => connection.ExecuteAsync(user.ToDeleteQuery(ID_SELECTOR), user));
         }
     }
 }
