@@ -30,6 +30,7 @@ namespace WebdevPeriod3
 
             services.AddTransient<UserRepository>();
             services.AddTransient<RoleRepository>();
+            services.AddTransient<UserRoleRepository>();
 
             services.AddScoped<IUserStore<User>, DapperUserStore>();
             services.AddScoped<IRoleStore<Role>, DapperRoleStore>();
