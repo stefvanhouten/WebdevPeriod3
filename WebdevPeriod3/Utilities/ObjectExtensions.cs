@@ -32,5 +32,11 @@ namespace WebdevPeriod3.Utilities
 
         public static string ToInsertQuery<T>(this T values, string tableName) =>
             $"INSERT INTO {tableName} SET {values.ToKeyGroup()};";
+
+        public static string ToDeleteQuery<T>(this T values, Expression<Func<T, object>> keyExpression)
+            => values.ToDeleteQuery(typeof(T).ToTableName(), keyExpression);
+
+        public static string ToDeleteQuery<T>(this T _, string tableName, Expression<Func<T, object>> keyExpression) =>
+            keyExpression.ToDeleteQuery(tableName);
     }
 }

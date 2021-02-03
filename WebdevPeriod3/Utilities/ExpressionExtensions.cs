@@ -71,5 +71,15 @@ namespace WebdevPeriod3.Utilities
         /// <returns>An update clause</returns>
         public static string ToUpdateClause<T, U>(this Expression<Func<T, U>> expression, string tableName, string valueName) =>
             $"UPDATE {tableName} SET {expression.ExtractMemberName()}=@{valueName}";
+
+        public static string ToDeleteQuery<T>(this Expression<Func<T, object>> expression) =>
+            expression.ToDeleteQuery(typeof(T).ToTableName());
+
+        public static string ToDeleteQuery<T>(this Expression<Func<T, object>> expression, string tableName)
+        {
+            var keyName = expression.ExtractMemberName();
+
+            return SqlHelper.CreateDeleteQuery(tableName, keyName, keyName);
+        }
     }
 }
