@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewData["Title"] = "Users";
+}
+<div class="p-5">
+    <table class="table table-fixed w-full text-left divide-y divide-gray-300">
+        <thead class="bg-yellow-800 shadow-lg">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">E-mail</th>
+                <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">Group</th>
+                <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">Action</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            <tr class="transition-all bg-gray-200 hover:bg-gray-300 hover:shadow-lg" key={index}>
+                <td class="p-4 w-1/4 break-all">
+                    <div class="ml-1">
+                        <div class="text-sm">
+                            <a class="text-blue-500 font-italic text-center break-all">
+                                user@gmail.com
+                            </a>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 break-all">
+                    <div class="text-sm text-gray-500">Admin</div>
+                </td>
+                <td class="px-6 py-4 break-all">
+                    <button class="uppercase flex items-center border border-red-600 p-2 text-red-600 max-w-max shadow-sm hover:shadow-lg rounded-full focus:outline-none">
+                        <svg width="16" height="16" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
+                            <path d="M12 12h2v12h-2z" fill="currentColor"></path>
+                            <path d="M18 12h2v12h-2z" fill="currentColor"></path>
+                            <path d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20z" fill="currentColor"></path>
+                            <path d="M12 2h8v2h-8z" fill="currentColor"></path>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            <tr class="transition-all bg-gray-200 hover:bg-gray-300 hover:shadow-lg" key={index}>
+                <td class="p-4 w-1/4 break-all">
+                    <div class="ml-1">
+                        <div class="text-sm">
+                            <a class="text-blue-500 font-italic text-center break-all">
+                                user@gmail.com
+                            </a>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 break-all">
+                    <div class="text-sm text-gray-500">Admin</div>
+                </td>
+                <td class="px-6 py-4 break-all">
+                    <button class="uppercase flex items-center border border-red-600 p-2 text-red-600 max-w-max shadow-sm hover:shadow-lg rounded-full focus:outline-none">
+                        <svg width="16" height="16" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
+                            <path d="M12 12h2v12h-2z" fill="currentColor"></path>
+                            <path d="M18 12h2v12h-2z" fill="currentColor"></path>
+                            <path d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20z" fill="currentColor"></path>
+                            <path d="M12 2h8v2h-8z" fill="currentColor"></path>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
