@@ -72,9 +72,22 @@ namespace WebdevPeriod3.Utilities
         public static string ToUpdateClause<T, U>(this Expression<Func<T, U>> expression, string tableName, string valueName) =>
             $"UPDATE {tableName} SET {expression.ExtractMemberName()}=@{valueName}";
 
+        /// <summary>
+        /// Converts an expression to a DELETE query for a table with the lower-case name of <typeparamref name="T"/> + 's'
+        /// </summary>
+        /// <typeparam name="T">The entity's type</typeparam>
+        /// <param name="expression">A member access expression to select the column which is used in the WHERE clause</param>
+        /// <returns>A DELETE query</returns>
         public static string ToDeleteQuery<T>(this Expression<Func<T, object>> expression) =>
             expression.ToDeleteQuery(typeof(T).ToTableName());
 
+        /// <summary>
+        /// Converts an expression to a DELETE query for the table <paramref name="tableName"/>
+        /// </summary>
+        /// <typeparam name="T">The entity's type</typeparam>
+        /// <param name="expression">A member access expression to select the column which is used in the WHERE clause</param>
+        /// <param name="tableName">The table from which to delete rows</param>
+        /// <returns>A DELETE query</returns>
         public static string ToDeleteQuery<T>(this Expression<Func<T, object>> expression, string tableName)
         {
             var keyName = expression.ExtractMemberName();
