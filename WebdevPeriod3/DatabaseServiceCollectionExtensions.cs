@@ -12,14 +12,14 @@ namespace WebdevPeriod3
         /// </summary>
         /// <param name="services"></param>
         /// <returns>The service collection</returns>
-        public static IServiceCollection AddMigrationRunner(this IServiceCollection services)
+        public static IServiceCollection AddMigrationRunner(this IServiceCollection services, string connectionString)
         {
             return services.AddFluentMigratorCore()
                 .ConfigureRunner(rb => rb
                     // Add SQLite support to FluentMigrator
                     .AddMySql5()
                     // Set the connection string
-                    .WithGlobalConnectionString("Server=127.0.0.1;Database=mydb;Uid=stef;Pwd=password")
+                    .WithGlobalConnectionString(connectionString)
                     // Define the assembly containing the migrations
                     .ScanIn(typeof(AddUsersTable).Assembly).For.Migrations())
                 // Enable logging to console in the FluentMigrator way
