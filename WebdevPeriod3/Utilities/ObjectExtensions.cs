@@ -30,9 +30,7 @@ namespace WebdevPeriod3.Utilities
         public static string ToInsertQuery<T>(this T values) =>
             values.ToInsertQuery(typeof(T).Name.ToLower() + 's');
 
-        public static string ToInsertQuery<T>(this T values, string tableName)
-        {
-            return $"INSERT INTO {tableName} SET {values.ToKeyGroup()};";
-        }
+        public static string ToInsertQuery<T>(this T values, string tableName) =>
+            $"INSERT INTO {tableName} SET {values.ToKeyGroup()};";
     }
 }
