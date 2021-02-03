@@ -104,7 +104,7 @@ namespace WebdevPeriod3.Utilities
         /// <typeparam name="K">The key's type</typeparam>
         /// <param name="expression">A member access expression to select the column which is used in the WHERE clause</param>
         /// <param name="valueName">The name of the template value for the WHERE clause</param>
-        /// <returns>Returns a WHERE clause such as "WHERE X=@Y"</returns>
+        /// <returns>A WHERE clause such as "WHERE X=@Y"</returns>
         public static string ToWhereClause<E, K>(this Expression<Func<E, K>> expression, string valueName)
         {
             return SqlHelper.CreateWhereClause(expression.ExtractMemberName(), valueName);
