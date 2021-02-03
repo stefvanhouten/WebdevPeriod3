@@ -29,10 +29,13 @@ namespace WebdevPeriod3
             services.AddTransient<IProductRepository, ProductRepository>();
 
             services.AddTransient<UserRepository>();
+            services.AddTransient<RoleRepository>();
 
             services.AddScoped<IUserStore<User>, DapperUserStore>();
+            services.AddScoped<IRoleStore<Role>, DapperRoleStore>();
 
-            services.AddIdentityCore<User>();
+            services.AddIdentityCore<User>()
+                .AddRoles<Role>();
 
             services.AddControllersWithViews(mvcOptions =>
             {
