@@ -1,0 +1,16 @@
+﻿@model WebdevPeriod3.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="flex flex-col w-full p-5">
+    <div class="flex w-full">
+        <input type="text" class="h-14 p-7 w-full rounded focus:shadow focus:outline-none" placeholder="Search for post">
+    </div>
+    <div class="grid grid-cols-1 gap-5 mt-6 sm:grid-cols-2 lg:grid-cols-2">
+        @foreach (RobotPost post in Model.RobotPosts)
+        {
+            @Html.Partial("_Post", post);
+        }
+    </div>
+</div>

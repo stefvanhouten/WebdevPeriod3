@@ -7,6 +7,7 @@ using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Areas.Identity.Services;
 using WebdevPeriod3.Entities;
 using WebdevPeriod3.Interfaces;
+using WebdevPeriod3.ViewModels;
 using WebdevPeriod3.Models;
 using WebdevPeriod3.Utilities;
 
@@ -23,11 +24,35 @@ namespace WebdevPeriod3.Controllers
             _userRepository = userRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<ActionResult<User>> GetAll()
         {
-            return Ok(await _userRepository.GetAll());
+            var users = await _userRepository.GetAllUsers();
+            return Ok(users);
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+
+        //Should be moved to a auth controller
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        //[Authorize]
         public IActionResult Privacy()
         {
             return View();
