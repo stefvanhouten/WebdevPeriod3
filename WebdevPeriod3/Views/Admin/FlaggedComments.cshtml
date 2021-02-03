@@ -1,0 +1,23 @@
+﻿@model WebdevPeriod3.ViewModels.AdminViewModel
+
+@{
+    ViewData["Title"] = "Flagged comments";
+}
+<div class="p-5">
+    <table class="table table-fixed w-full text-left divide-y divide-gray-300">
+        <thead class="bg-yellow-800 shadow-lg">
+            <tr>
+                <th scope="col" class="p-4 w-1/4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">Post</th>
+                <th scope="col" class="w-1/4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">Posted by</th>
+                <th scope="col" class="w-2/4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">Summary</th>
+                <th scope="col" class="w-1/6 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">Action</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            @foreach (Comment comment in Model.Comments)
+            {
+                @Html.Partial("_FlaggedCommentTableRow", comment);
+            }
+        </tbody>
+    </table>
+</div>
