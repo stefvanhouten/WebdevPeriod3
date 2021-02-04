@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace WebdevPeriod3.Entities
+﻿namespace WebdevPeriod3.Entities
 {
     /// <summary>
     /// Represents a relationship between a product and a nested product (a subproduct)
