@@ -28,9 +28,24 @@ namespace WebdevPeriod3.Utilities
             return body.Member.Name;
         }
 
+        /// <summary>
+        /// Converts an expression to a column name
+        /// </summary>
+        /// <typeparam name="T">The entity's type</typeparam>
+        /// <typeparam name="U">The column's type</typeparam>
+        /// <param name="expression">The expression to convert to a column name</param>
+        /// <returns>A column name such as "TableName.ColumnName"</returns>
         public static string ToColumnName<T, U>(this Expression<Func<T, U>> expression) =>
             expression.ToColumnName(typeof(T).ToTableName());
 
+        /// <summary>
+        /// Converts an expression to a column name
+        /// </summary>
+        /// <typeparam name="T">The entity's type</typeparam>
+        /// <typeparam name="U">The column's type</typeparam>
+        /// <param name="expression">The expression to convert to a column name</param>
+        /// <param name="tableName">The table's name</param>
+        /// <returns>A column name such as "TableName.ColumnName"</returns>
         public static string ToColumnName<T, U>(this Expression<Func<T, U>> expression, string tableName) =>
             $"{tableName}.{expression.ExtractMemberName()}";
 
@@ -114,12 +129,21 @@ namespace WebdevPeriod3.Utilities
         /// <typeparam name="K">The key's type</typeparam>
         /// <param name="expression">A member access expression to select the column which is used in the WHERE clause</param>
         /// <param name="valueName">The name of the template value for the WHERE clause</param>
-        /// <returns>A WHERE clause such as "WHERE X=@Y"</returns>
+        /// <returns>A WHERE clause such as "WHERE SomeThings.X=@Y"</returns>
         public static string ToWhereClause<E, K>(this Expression<Func<E, K>> expression, string valueName)
         {
             return expression.ToWhereClause(typeof(E).ToTableName(), valueName);
         }
 
+        /// <summary>
+        /// Converts an expression to a WHERE clause
+        /// </summary>
+        /// <typeparam name="E">The entity's type</typeparam>
+        /// <typeparam name="K">The key's type</typeparam>
+        /// <param name="expression">The expression to convert to a WHERE clause</param>
+        /// <param name="tableName">The table's name</param>
+        /// <param name="valueName">The name of the template value for the WHERE clause</param>
+        /// <returns>A WHERE clause such as "WHERE SomeThings.X=@Y"</returns>
         public static string ToWhereClause<E, K>(this Expression<Func<E, K>> expression, string tableName, string valueName)
         {
             return SqlHelper.CreateWhereClause($"{expression.ToColumnName(tableName)}", valueName);
