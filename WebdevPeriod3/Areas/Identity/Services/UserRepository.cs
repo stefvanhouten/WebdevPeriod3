@@ -13,7 +13,7 @@ using WebdevPeriod3.Utilities;
 
 namespace WebdevPeriod3.Areas.Identity.Services
 {
-    public class UserRepository : BaseRepository
+    public class UserRepository : TransactionRepositoryBase
     {
         public class DuplicateUserNameException : ArgumentException
         {
@@ -23,29 +23,16 @@ namespace WebdevPeriod3.Areas.Identity.Services
         private static readonly Expression<Func<User, string>> ID_SELECTOR = user => user.Id;
         private static readonly Expression<Func<User, string>> NORMALIZED_USERNAME_SELECTOR = user => user.NormalizedUserName;
 
-        public UserRepository(IConfiguration configuration) : base(configuration) { }
+        public UserRepository(DapperTransactionService dapperTransactionService, IConfiguration configuration) : base(dapperTransactionService, configuration) { }
 
-        public async Task Add(User user)
+        public void Add(User user)
         {
-            try
-            {
-                if (user.Id == null)
-                    user.Id = Guid.NewGuid().ToString("N");
+            if (user.Id == null)
+                user.Id = Guid.NewGuid().ToString("N");
 
-                await WithConnection(
-                    connection => connection.ExecuteAsync(
-                        user.ToInsertQuery(), user));
-            }
-            catch (MySqlException exception)
-            {
-                switch ((MySqlErrorCode)exception.Number)
-                {
-                    case MySqlErrorCode.DuplicateKeyEntry:
-                        throw new DuplicateUserNameException();
-                    default:
-                        throw exception;
-                }
-            }
+            AddOperation(
+                (connection, transaction) => connection.ExecuteAsync(
+                    user.ToInsertQuery(), user, transaction));
         }
 
         public Task<IEnumerable<User>> GetAll() =>
@@ -75,79 +62,44 @@ namespace WebdevPeriod3.Areas.Identity.Services
                     SqlHelper.CreateSelectWhereQuery(expression, NORMALIZED_USERNAME_SELECTOR, nameof(normalizedUserName)),
                     new { normalizedUserName }));
 
-        public async Task UpdateFieldById<T>(string id, Expression<Func<User, T>> expression, T value)
+        public void UpdateFieldById<T>(string id, Expression<Func<User, T>> expression, T value)
         {
-            try {
-                await WithConnection(
-                    connection => connection.ExecuteAsync(
-                        $"{expression.ToUpdateClause(nameof(value))} {ID_SELECTOR.ToWhereClause(nameof(id))};",
-                        new { id, value }));
-            } catch (MySqlException exception)
-            {
-                switch ((MySqlErrorCode)exception.ErrorCode)
-                {
-                    case MySqlErrorCode.DuplicateKeyEntry:
-                        throw new DuplicateUserNameException();
-                    default:
-                        throw exception;
-                }
-            }
+            AddOperation(
+                   (connection, transaction) => connection.ExecuteAsync(
+                       $"{expression.ToUpdateClause(nameof(value))} {ID_SELECTOR.ToWhereClause(nameof(id))};",
+                       new { id, value }, transaction));
         }
 
-        public async Task UpdateFieldByNormalizedUserName<T>(string normalizedUserName, Expression<Func<User, T>> expression, T value)
+        public void UpdateFieldByNormalizedUserName<T>(string normalizedUserName, Expression<Func<User, T>> expression, T value)
         {
-            try
-            {
-                await WithConnection(
-                    connection => connection.ExecuteAsync(
-                        $"{expression.ToUpdateClause(nameof(value))} {NORMALIZED_USERNAME_SELECTOR.ToWhereClause(nameof(normalizedUserName))};",
-                        new { normalizedUserName, value }));
-            } catch (MySqlException exception)
-            {
-                switch ((MySqlErrorCode)exception.ErrorCode)
-                {
-                    case MySqlErrorCode.DuplicateKeyEntry:
-                        throw new DuplicateUserNameException();
-                    default:
-                        throw exception;
-                }
-            }
+            AddOperation(
+                (connection, transaction) => connection.ExecuteAsync(
+                    $"{expression.ToUpdateClause(nameof(value))} {NORMALIZED_USERNAME_SELECTOR.ToWhereClause(nameof(normalizedUserName))};",
+                    new { normalizedUserName, value }, transaction));
         }
 
-        public async Task Update(User user)
+        public void Update(User user)
         {
-            try
-            {
-                await WithConnection(
-                    connection => connection.ExecuteAsync(
-                        user.ToUpdateQuery(ID_SELECTOR), user));
-            } catch (MySqlException exception)
-            {
-                switch ((MySqlErrorCode)exception.ErrorCode)
-                {
-                    case MySqlErrorCode.DuplicateKeyEntry:
-                        throw new DuplicateUserNameException();
-                    default:
-                        throw exception;
-                }
-            }
+            AddOperation(
+                (connection, transaction) => connection.ExecuteAsync(
+                    user.ToUpdateQuery(ID_SELECTOR), user, transaction));
         }
 
-        public async Task Delete(User user)
+        public void Delete(User user)
         {
             if (user.Id != null)
-                await WithConnection(
-                    connection => connection.ExecuteAsync(user.ToDeleteQuery(ID_SELECTOR), user));
+                AddOperation(
+                    (connection, transaction) => connection.ExecuteAsync(user.ToDeleteQuery(ID_SELECTOR), user, transaction));
             else if (user.NormalizedUserName != null)
-                await WithConnection(
-                    connection => connection.ExecuteAsync(user.ToDeleteQuery(NORMALIZED_USERNAME_SELECTOR), user));
+                AddOperation(
+                    (connection, transaction) => connection.ExecuteAsync(user.ToDeleteQuery(NORMALIZED_USERNAME_SELECTOR), user, transaction));
             else
             {
                 user.NormalizedUserName = user.UserName?.ToUpperInvariant()
                     ?? throw new ArgumentException("The user has to have a non-null ID, normalized user name or user name.");
 
-                await WithConnection(
-                    connection => connection.ExecuteAsync(user.ToDeleteQuery(NORMALIZED_USERNAME_SELECTOR), user));
+                AddOperation(
+                    (connection, transaction) => connection.ExecuteAsync(user.ToDeleteQuery(NORMALIZED_USERNAME_SELECTOR), user, transaction));
             }
         }
     }

@@ -26,6 +26,8 @@ namespace WebdevPeriod3
         {
             services.AddMigrationRunner(Configuration.GetConnectionString("Master"));
 
+            services.AddScoped<DapperTransactionService>();
+
             services.AddTransient<IProductCommandText, ProductCommandText>();
             services.AddTransient<IProductRepository, ProductRepository>();
 
@@ -85,7 +87,9 @@ namespace WebdevPeriod3
 
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-                var task = userManager.CreateAsync(new User("thomasio101"), "Test1234!");
+                var user = new User("bacon");
+
+                var task = userManager.CreateAsync(user, "Test1234!");
 
                 task.Wait();
 
@@ -93,6 +97,10 @@ namespace WebdevPeriod3
                 {
                     Debug.WriteLine(error.Description);
                 }
+
+                var task2 = userManager.AddToRoleAsync(user, "Moderator");
+
+                task2.Wait();
             };
         }
     }

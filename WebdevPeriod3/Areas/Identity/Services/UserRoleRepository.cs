@@ -10,7 +10,7 @@ using WebdevPeriod3.Utilities;
 
 namespace WebdevPeriod3.Areas.Identity.Services
 {
-    public class UserRoleRepository : BaseRepository
+    public class UserRoleRepository : TransactionRepositoryBase
     {
         /// <summary>
         /// Selects the role ID from a user role
@@ -41,7 +41,7 @@ namespace WebdevPeriod3.Areas.Identity.Services
 
         private readonly RoleRepository _roleRepository;
 
-        public UserRoleRepository(IConfiguration configuration, RoleRepository roleRepository) : base(configuration)
+        public UserRoleRepository(DapperTransactionService dapperTransactionService, IConfiguration configuration, RoleRepository roleRepository) : base(dapperTransactionService, configuration)
         {
             _roleRepository = roleRepository;
         }
@@ -101,8 +101,8 @@ namespace WebdevPeriod3.Areas.Identity.Services
                 $");",
                 new { normalizedUserName, roleName }));
 
-        public Task RemoveUserFromRoleByUserId(string userId, string roleName) =>
-            WithConnection(connection => connection.ExecuteAsync(
+        public void RemoveUserFromRoleByUserId(string userId, string roleName) =>
+            AddOperation((connection, transaction) => connection.ExecuteAsync(
                 // Delete a user role
                 $"DELETE FROM {typeof(UserRole).ToTableName()} " +
                 // Join roles to user roles by role ID...
@@ -111,10 +111,10 @@ namespace WebdevPeriod3.Areas.Identity.Services
                 $"AND {RIGHT_ROLE_NAME_SELECTOR.ToKeyValuePair(nameof(roleName))} " +
                 // ...and the user ID matches the provided user ID
                 $"AND {USER_ID_SELECTOR.ToKeyValuePair(nameof(userId))};",
-                new { userId, roleName }));
+                new { userId, roleName }, transaction));
 
-        public Task RemoveUserFromRoleByNormalizedUserName(string normalizedUserName, string roleName) =>
-            WithConnection(connection => connection.ExecuteAsync(
+        public void RemoveUserFromRoleByNormalizedUserName(string normalizedUserName, string roleName) =>
+            AddOperation((connection, transaction) => connection.ExecuteAsync(
                 // Delete a user role
                 $"DELETE FROM {typeof(UserRole).ToTableName()} " +
                 // Join roles to user roles by role ID...
@@ -125,7 +125,7 @@ namespace WebdevPeriod3.Areas.Identity.Services
                 $"INNER {USER_ID_SELECTOR.ToJoinClause(RIGHT_USER_ID_SELECTOR)} " +
                 // ...wherever the normalized user name matches the provided normalized user name
                 $"AND {RIGHT_NORMALIZED_USER_NAME_SELECTOR.ToKeyValuePair(nameof(normalizedUserName))};",
-                new { normalizedUserName, roleName }));
+                new { normalizedUserName, roleName }, transaction));
 
         public async Task AddUserToRole(string userId, string roleName)
         {
@@ -136,9 +136,9 @@ namespace WebdevPeriod3.Areas.Identity.Services
                 UserId = userId
             };
 
-            await WithConnection(connection => connection.ExecuteAsync(
+            AddOperation((connection, transaction) => connection.ExecuteAsync(
                 userRole.ToInsertQuery(),
-                userRole));
+                userRole, transaction));
         }
     }
 }
