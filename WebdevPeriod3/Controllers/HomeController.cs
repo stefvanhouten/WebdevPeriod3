@@ -3,13 +3,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Areas.Identity.Services;
-using WebdevPeriod3.Entities;
-using WebdevPeriod3.Interfaces;
 using WebdevPeriod3.ViewModels;
-using WebdevPeriod3.Models;
-using WebdevPeriod3.Utilities;
 
 namespace WebdevPeriod3.Controllers
 {

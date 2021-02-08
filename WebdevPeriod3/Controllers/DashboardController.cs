@@ -63,5 +63,9 @@ namespace WebdevPeriod3.Controllers
             return View();
         }
 
+        public IActionResult CreatePost()
+        {
+            return View();
+        }
     }
 }

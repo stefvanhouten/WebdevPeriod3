@@ -2,6 +2,7 @@
 
 namespace WebdevPeriod3.Models
 {
+    //TODO: classes in this folder are just used for mocking data on the views
     public class BlogImage
     {
         public int ID { get; set; }
