@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Diagnostics;
 using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Areas.Identity.Services;
 using WebdevPeriod3.Interfaces;
@@ -84,7 +85,14 @@ namespace WebdevPeriod3
 
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-                userManager.CreateAsync(new User("thomasio101"), "Test1234!").Wait();
+                var task = userManager.CreateAsync(new User("thomasio101"), "Test1234!");
+
+                task.Wait();
+
+                foreach (var error in task.Result.Errors)
+                {
+                    Debug.WriteLine(error.Description);
+                }
             };
         }
     }
