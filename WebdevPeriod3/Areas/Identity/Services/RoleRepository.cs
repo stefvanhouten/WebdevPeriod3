@@ -10,7 +10,7 @@ using WebdevPeriod3.Utilities;
 
 namespace WebdevPeriod3.Areas.Identity.Services
 {
-    public class RoleRepository : BaseRepository
+    public class RoleRepository : TransactionRepositoryBase
     {
         public class DuplicateRoleNameException : ArgumentException
         {
@@ -20,34 +20,21 @@ namespace WebdevPeriod3.Areas.Identity.Services
         private static readonly Expression<Func<Role, string>> ID_SELECTOR = role => role.Id;
         private static readonly Expression<Func<Role, string>> NORMALIZED_NAME_SELECTOR = role => role.NormalizedName;
 
-        public RoleRepository(IConfiguration configuration) : base(configuration) { }
+        public RoleRepository(DapperTransactionService dapperTransactionService, IConfiguration configuration) : base(dapperTransactionService, configuration) { }
 
-        public async Task Add(Role role)
+        public void Add(Role role)
         {
             if (role.Id == null)
                 role.Id = Guid.NewGuid().ToString("N");
 
-            try
-            {
-                await WithConnection(
-                    connection => connection.ExecuteAsync(role.ToInsertQuery(), role));
-            }
-            catch (MySqlException exception)
-            {
-                switch ((MySqlErrorCode)exception.ErrorCode)
-                {
-                    case MySqlErrorCode.DuplicateKeyEntry:
-                        throw new DuplicateRoleNameException();
-                    default:
-                        throw exception;
-                }
-            }
+            AddOperation(
+                (connection, transaction) => connection.ExecuteAsync(role.ToInsertQuery(), role, transaction));
         }
 
-        public async Task Delete(Role role)
+        public void Delete(Role role)
         {
-            await WithConnection(
-                connection => connection.ExecuteAsync(role.ToDeleteQuery(ID_SELECTOR)));
+            AddOperation(
+                (connection, transaction) => connection.ExecuteAsync(role.ToDeleteQuery(ID_SELECTOR), role, transaction));
         }
 
         public Task<Role> FindById(string id) =>
@@ -74,47 +61,20 @@ namespace WebdevPeriod3.Areas.Identity.Services
                     SqlHelper.CreateSelectWhereQuery(expression, NORMALIZED_NAME_SELECTOR, nameof(normalizedName)),
                     new { normalizedName }));
 
-        public async Task UpdateFieldById<T>(string id, T value, Expression<Func<Role, T>> expression)
+        public void UpdateFieldById<T>(string id, T value, Expression<Func<Role, T>> expression)
         {
-            try
-            {
-                await WithConnection(
-                    connection => connection.ExecuteAsync(
-                        $"{expression.ToUpdateClause(nameof(value))} {ID_SELECTOR.ToWhereClause(nameof(id))};",
-                        new { value, id }));
-
-            }
-            catch (MySqlException exception)
-            {
-                switch ((MySqlErrorCode)exception.ErrorCode)
-                {
-                    case MySqlErrorCode.DuplicateKeyEntry:
-                        throw new DuplicateRoleNameException();
-                    default:
-                        throw exception;
-                }
-            }
+            AddOperation(
+                (connection, transaction) => connection.ExecuteAsync(
+                    $"{expression.ToUpdateClause(nameof(value))} {ID_SELECTOR.ToWhereClause(nameof(id))};",
+                    new { value, id },
+                    transaction));
         }
 
-        public async Task Update(Role role)
+        public void Update(Role role)
         {
-            try
-            {
-                await WithConnection(
-                    connection => connection.ExecuteAsync(
-                        role.ToUpdateQuery(ID_SELECTOR)));
-
-            }
-            catch (MySqlException exception)
-            {
-                switch ((MySqlErrorCode)exception.ErrorCode)
-                {
-                    case MySqlErrorCode.DuplicateKeyEntry:
-                        throw new DuplicateRoleNameException();
-                    default:
-                        throw exception;
-                }
-            }
+            AddOperation(
+                (connection, transaction) => connection.ExecuteAsync(
+                    role.ToUpdateQuery(ID_SELECTOR), role, transaction));
         }
     }
 }
