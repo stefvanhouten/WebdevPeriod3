@@ -29,11 +29,10 @@ namespace WebdevPeriod3
             services.AddScoped<DapperTransactionService>();
 
             services.AddTransient<IProductCommandText, ProductCommandText>();
-            services.AddTransient<IProductRepository, ProductRepository>();
 
-            services.AddTransient<UserRepository>();
-            services.AddTransient<RoleRepository>();
-            services.AddTransient<UserRoleRepository>();
+            services.AddScoped<UserRepository>();
+            services.AddScoped<RoleRepository>();
+            services.AddScoped<UserRoleRepository>();
 
             services.AddScoped<IUserStore<User>, DapperUserStore>();
             services.AddScoped<IRoleStore<Role>, DapperRoleStore>();
