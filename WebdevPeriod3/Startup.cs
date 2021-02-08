@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Diagnostics;
 using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Areas.Identity.Services;
 using WebdevPeriod3.Interfaces;
@@ -83,24 +82,7 @@ namespace WebdevPeriod3
                 using var scope = app.ApplicationServices.CreateScope();
 
                 scope.ServiceProvider.GetRequiredService<MigrationService>().UpdateDatabase();
-
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-
-                var user = new User("bacon");
-
-                var task = userManager.CreateAsync(user, "Test1234!");
-
-                task.Wait();
-
-                foreach (var error in task.Result.Errors)
-                {
-                    Debug.WriteLine(error.Description);
-                }
-
-                var task2 = userManager.AddToRoleAsync(user, "Moderator");
-
-                task2.Wait();
-            };
+            }
         }
     }
 }
