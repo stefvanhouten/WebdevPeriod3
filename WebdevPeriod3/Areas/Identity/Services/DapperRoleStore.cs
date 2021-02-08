@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebdevPeriod3.Areas.Identity.Entities;
+using WebdevPeriod3.Services;
 
 namespace WebdevPeriod3.Areas.Identity.Services
 {
@@ -16,22 +15,28 @@ namespace WebdevPeriod3.Areas.Identity.Services
     public class DapperRoleStore : IRoleStore<Role>
     {
         private readonly RoleRepository _roleRepository;
+        private readonly DapperTransactionService _dapperTransactionService;
 
-        public DapperRoleStore(RoleRepository roleRepository)
+        public DapperRoleStore(RoleRepository roleRepository, DapperTransactionService dapperTransactionService)
         {
             _roleRepository = roleRepository;
+            _dapperTransactionService = dapperTransactionService;
         }
 
         public async Task<IdentityResult> CreateAsync(Role role, CancellationToken cancellationToken)
         {
-            await _roleRepository.Add(role);
+            _roleRepository.Add(role);
+
+            await _dapperTransactionService.RunOperations(cancellationToken);
 
             return IdentityResult.Success;
         }
 
         public async Task<IdentityResult> DeleteAsync(Role role, CancellationToken cancellationToken)
         {
-            await _roleRepository.Delete(role);
+            _roleRepository.Delete(role);
+
+            await _dapperTransactionService.RunOperations(cancellationToken);
 
             return IdentityResult.Success;
         }
@@ -44,32 +49,68 @@ namespace WebdevPeriod3.Areas.Identity.Services
         public Task<Role> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken) =>
             _roleRepository.FindByNormalizedName(normalizedRoleName);
 
-        public async Task<string> GetNormalizedRoleNameAsync(Role role, CancellationToken cancellationToken) =>
-            role.NormalizedName ?? await _roleRepository.GetFieldById(role.Id, role => role.NormalizedName);
-
-        public async Task<string> GetRoleIdAsync(Role role, CancellationToken cancellationToken) =>
-            role.Id ?? await _roleRepository.GetFieldByNormalizedName(role.NormalizedName, role => role.NormalizedName);
-
-        public async Task<string> GetRoleNameAsync(Role role, CancellationToken cancellationToken) =>
-            role.Name ?? await _roleRepository.GetFieldById(role.Id, role => role.Name);
-
-        public async Task SetNormalizedRoleNameAsync(Role role, string normalizedName, CancellationToken cancellationToken)
+        public Task<string> GetNormalizedRoleNameAsync(Role role, CancellationToken cancellationToken)
         {
-            await _roleRepository.UpdateFieldById(role.Id, normalizedName, role => role.NormalizedName);
+            cancellationToken.ThrowIfCancellationRequested();
 
-            role.NormalizedName = normalizedName;
+            if (role == null)
+            {
+                throw new ArgumentNullException(nameof(role));
+            }
+            return Task.FromResult(role.NormalizedName);
         }
 
-        public async Task SetRoleNameAsync(Role role, string roleName, CancellationToken cancellationToken)
+        public Task<string> GetRoleIdAsync(Role role, CancellationToken cancellationToken)
         {
-            await _roleRepository.UpdateFieldById(role.Id, roleName, role => role.Name);
+            cancellationToken.ThrowIfCancellationRequested();
 
+            if (role == null)
+            {
+                throw new ArgumentNullException(nameof(role));
+            }
+            return Task.FromResult(role.Id);
+        }
+
+        public Task<string> GetRoleNameAsync(Role role, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (role == null)
+            {
+                throw new ArgumentNullException(nameof(role));
+            }
+            return Task.FromResult(role.Name);
+        }
+
+        public Task SetNormalizedRoleNameAsync(Role role, string normalizedName, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (role == null)
+            {
+                throw new ArgumentNullException(nameof(role));
+            }
+            role.NormalizedName = normalizedName;
+            return Task.CompletedTask;
+        }
+
+        public Task SetRoleNameAsync(Role role, string roleName, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (role == null)
+            {
+                throw new ArgumentNullException(nameof(role));
+            }
             role.Name = roleName;
+            return Task.CompletedTask;
         }
 
         public async Task<IdentityResult> UpdateAsync(Role role, CancellationToken cancellationToken)
         {
-            await _roleRepository.Update(role);
+            _roleRepository.Update(role);
+
+            await _dapperTransactionService.RunOperations(cancellationToken);
 
             return IdentityResult.Success;
         }

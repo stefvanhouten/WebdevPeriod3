@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebdevPeriod3.Areas.Identity.Entities;
+using WebdevPeriod3.Services;
+using static WebdevPeriod3.Areas.Identity.Services.UserRepository;
 
 namespace WebdevPeriod3.Areas.Identity.Services
 {
@@ -15,26 +18,54 @@ namespace WebdevPeriod3.Areas.Identity.Services
     {
         private readonly UserRepository _userRepository;
         private readonly UserRoleRepository _userRoleRepository;
+        private readonly IdentityErrorDescriber _identityErrorDescriber;
+        private readonly DapperTransactionService _dapperTransactionService;
 
-        public DapperUserStore(UserRepository userRepository, UserRoleRepository userRoleRepository)
+        public DapperUserStore(UserRepository userRepository, UserRoleRepository userRoleRepository, DapperTransactionService dappertransactionservice, IdentityErrorDescriber identityErrorDescriber)
         {
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
+            _identityErrorDescriber = identityErrorDescriber;
+            _dapperTransactionService = dappertransactionservice;
         }
 
-        public Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken) =>
-            _userRoleRepository.AddUserToRole(user.Id, roleName);
+        public async Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (string.IsNullOrWhiteSpace(roleName))
+            {
+                throw new ArgumentException(nameof(roleName));
+            }
+
+            await _userRoleRepository.AddUserToRole(user.Id, roleName);
+        }
 
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
-            await _userRepository.Add(user);
+            try
+            {
+                _userRepository.Add(user);
 
-            return IdentityResult.Success;
+                await _dapperTransactionService.RunOperations(cancellationToken);
+
+                return IdentityResult.Success;
+            }
+            catch (DuplicateUserNameException)
+            {
+                return IdentityResult.Failed(_identityErrorDescriber.DuplicateUserName(user.UserName));
+            }
         }
 
         public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
         {
-            await _userRepository.Delete(user);
+            _userRepository.Delete(user);
+
+            await _dapperTransactionService.RunOperations(cancellationToken);
 
             return IdentityResult.Success;
         }
@@ -48,27 +79,74 @@ namespace WebdevPeriod3.Areas.Identity.Services
         public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken) =>
             _userRepository.FindByNormalizedUserName(normalizedUserName);
 
-        public async Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken) =>
-            user.NormalizedUserName ?? await _userRepository.GetFieldById(user.Id, user => user.NormalizedUserName);
+        public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
 
-        public async Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken) =>
-            user.PasswordHash ?? await _userRepository.GetFieldById(user.Id, user => user.PasswordHash);
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.NormalizedUserName);
+        }
+
+        public Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.PasswordHash);
+        }
 
         public async Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
         {
-            var roleNames = await _userRoleRepository.GetRolesFieldByUserId(user.Id, role => role.Name);
-
-            return roleNames.ToList();
+            if (user.Id != null)
+                return (await _userRoleRepository.GetRolesFieldByUserId(user.Id, role => role.Name)).ToList();
+            else if (user.NormalizedUserName != null)
+                return (await _userRoleRepository.GetRolesFieldByNormalizedUserName(user.NormalizedUserName, role => role.Name)).ToList();
+            else
+                return (await _userRoleRepository.GetRolesFieldByNormalizedUserName(
+                    user.UserName?.ToUpperInvariant()
+                    ?? throw new ArgumentException(
+                        "The provided user has to have a non-null ID, normalized user name, or user name."),
+                    role => role.Name)).ToList();
         }
 
-        public async Task<string> GetSecurityStampAsync(User user, CancellationToken cancellationToken) =>
-            user.SecurityStamp ?? await _userRepository.GetFieldById(user.Id, user => user.SecurityStamp);
+        public Task<string> GetSecurityStampAsync(User user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
 
-        public async Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken) =>
-            user.Id ?? await _userRepository.GetFieldByNormalizedUserName(user.NormalizedUserName, user => user.Id);
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.SecurityStamp);
+        }
 
-        public async Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken) =>
-            user.UserName ?? await _userRepository.GetFieldById(user.Id, user => user.UserName);
+        public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.Id);
+        }
+
+        public Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.UserName);
+        }
 
         public async Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
@@ -78,48 +156,102 @@ namespace WebdevPeriod3.Areas.Identity.Services
         }
 
         public async Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken) =>
-            user.PasswordHash != null || await _userRepository.GetFieldById(user.Id, user => user.PasswordHash) == null;
+            await GetPasswordHashAsync(user, cancellationToken) != null;
 
-        public Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken) =>
-            _userRoleRepository.IsInRole(user.Id, roleName);
-
-        public Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken) =>
-            _userRoleRepository.RemoveUserFromRole(user.Id, roleName);
-
-        public async Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
+        public Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            await _userRepository.UpdateFieldById(user.Id, user => user.NormalizedUserName, normalizedName);
+            if (user.Id != null)
+                return _userRoleRepository.IsInRoleByUserId(user.Id, roleName);
+            if (user.NormalizedUserName != null)
+                return _userRoleRepository.IsInRoleByNormalizedUserName(user.NormalizedUserName, roleName);
+            else
+                return _userRoleRepository.IsInRoleByNormalizedUserName(
+                    user.UserName?.ToUpperInvariant()
+                    ?? throw new ArgumentException(
+                        "The provided user has to have a non-null ID, normalized user name, or user name."),
+                    roleName);
+        }
 
+        public Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
+        {
+            if (user.Id != null)
+                _userRoleRepository.RemoveUserFromRoleByUserId(user.Id, roleName);
+            else if (user.NormalizedUserName != null)
+                _userRoleRepository.RemoveUserFromRoleByNormalizedUserName(user.NormalizedUserName, roleName);
+            else
+                _userRoleRepository.RemoveUserFromRoleByNormalizedUserName(
+                    user.UserName?.ToUpperInvariant()
+                    ?? throw new ArgumentException(
+                        "The provided user has to have a non-null ID, normalized user name, or user name."),
+                    roleName);
+
+            return Task.CompletedTask;
+        }
+
+        public Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
             user.NormalizedUserName = normalizedName;
+            return Task.CompletedTask;
         }
 
-        public async Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
+        public Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
         {
-            await _userRepository.UpdateFieldById(user.Id, user => user.PasswordHash, passwordHash);
+            cancellationToken.ThrowIfCancellationRequested();
 
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
             user.PasswordHash = passwordHash;
+            return Task.CompletedTask;
         }
 
-        public async Task SetSecurityStampAsync(User user, string stamp, CancellationToken cancellationToken)
+        public Task SetSecurityStampAsync(User user, string stamp, CancellationToken cancellationToken)
         {
-            await _userRepository.UpdateFieldById(user.Id, user => user.SecurityStamp, stamp);
+            cancellationToken.ThrowIfCancellationRequested();
 
-            user.SecurityStamp = stamp;
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            user.SecurityStamp = stamp ?? throw new ArgumentNullException(nameof(stamp));
+            return Task.CompletedTask;
         }
 
-        public async Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
+        public Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
         {
-            await _userRepository.UpdateFieldById(user.Id, user => user.UserName, userName);
+            cancellationToken.ThrowIfCancellationRequested();
 
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
             user.UserName = userName;
+            return Task.CompletedTask;
         }
 
         public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
         {
-            await _userRepository.Update(user);
+            try
+            {
+                _userRepository.Update(user);
 
-            // TODO: Decide what result we should return
-            return IdentityResult.Success;
+                await _dapperTransactionService.RunOperations(cancellationToken);
+
+                // TODO: Decide what result we should return
+                return IdentityResult.Success;
+            }
+            catch (DuplicateUserNameException)
+            {
+                return IdentityResult.Failed(_identityErrorDescriber.DuplicateUserName(user.UserName));
+            }
         }
     }
 }

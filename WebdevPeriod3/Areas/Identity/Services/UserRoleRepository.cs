@@ -10,7 +10,7 @@ using WebdevPeriod3.Utilities;
 
 namespace WebdevPeriod3.Areas.Identity.Services
 {
-    public class UserRoleRepository : BaseRepository
+    public class UserRoleRepository : TransactionRepositoryBase
     {
         /// <summary>
         /// Selects the role ID from a user role
@@ -34,10 +34,14 @@ namespace WebdevPeriod3.Areas.Identity.Services
         /// Selects the user ID from a user
         /// </summary>
         private readonly Expression<Func<User, string>> RIGHT_USER_ID_SELECTOR = user => user.Id;
+        /// <summary>
+        /// Selects the user name from a user
+        /// </summary>
+        private readonly Expression<Func<User, string>> RIGHT_NORMALIZED_USER_NAME_SELECTOR = user => user.NormalizedUserName;
 
         private readonly RoleRepository _roleRepository;
 
-        public UserRoleRepository(IConfiguration configuration, RoleRepository roleRepository) : base(configuration)
+        public UserRoleRepository(DapperTransactionService dapperTransactionService, IConfiguration configuration, RoleRepository roleRepository) : base(dapperTransactionService, configuration)
         {
             _roleRepository = roleRepository;
         }
@@ -52,6 +56,14 @@ namespace WebdevPeriod3.Areas.Identity.Services
                 $"AND {USER_ID_SELECTOR.ToKeyValuePair(nameof(userId))};",
                 new { userId }));
 
+        public Task<IEnumerable<T>> GetRolesFieldByNormalizedUserName<T>(string normalizedName, Expression<Func<Role, T>> expression) =>
+            WithConnection(connection => connection.QueryAsync<T>(
+                // Select the expression, specifying the Users table as the left-hand table
+                $"{expression.ToSelectClause(typeof(User).ToTableName())} " +
+                $"INNER {RIGHT_USER_ID_SELECTOR.ToJoinClause(USER_ID_SELECTOR)} " +
+                $"AND {RIGHT_NORMALIZED_USER_NAME_SELECTOR.ToKeyValuePair(nameof(normalizedName))} " +
+                $"INNER {ROLE_ID_SELECTOR.ToJoinClause(RIGHT_ROLE_ID_SELECTOR)};"));
+
         public Task<IEnumerable<User>> GetUsersByRoleName(string roleName) =>
             WithConnection(connection => connection.QueryAsync<User>(
                 // Select all fields from the Users table, specifying the Roles table as the left-hand table
@@ -64,12 +76,13 @@ namespace WebdevPeriod3.Areas.Identity.Services
                 $"INNER {USER_ID_SELECTOR.ToJoinClause(RIGHT_USER_ID_SELECTOR)};",
                 new { roleName }));
 
-        public Task<bool> IsInRole(string userId, string roleName) =>
+        public Task<bool> IsInRoleByUserId(string userId, string roleName) =>
             WithConnection(connection => connection.ExecuteScalarAsync<bool>(
                 $"SELECT EXISTS (" +
                 $"SELECT 1 FROM {typeof(User).ToTableName()} " +
                 // Join users to user roles by user ID
                 $"INNER {RIGHT_USER_ID_SELECTOR.ToJoinClause(USER_ID_SELECTOR)} " +
+                $"AND {RIGHT_USER_ID_SELECTOR.ToKeyValuePair(nameof(userId))} " +
                 // Join user roles to roles by role ID...
                 $"INNER {ROLE_ID_SELECTOR.ToJoinClause(RIGHT_ROLE_ID_SELECTOR)} " +
                 // ...whereever the role name matches the provided role name
@@ -77,14 +90,42 @@ namespace WebdevPeriod3.Areas.Identity.Services
                 $");",
                 new { userId, roleName }));
 
-        public Task RemoveUserFromRole(string userId, string roleName) =>
-            WithConnection(connection => connection.ExecuteAsync(
+        public Task<bool> IsInRoleByNormalizedUserName(string normalizedUserName, string roleName) =>
+            WithConnection(connection => connection.ExecuteScalarAsync<bool>(
+                $"SELECT EXISTS (" +
+                $"SELECT 1 FROM {typeof(User).ToTableName()} " +
+                $"INNER {RIGHT_USER_ID_SELECTOR.ToJoinClause(USER_ID_SELECTOR)} " +
+                $"AND {RIGHT_NORMALIZED_USER_NAME_SELECTOR.ToKeyValuePair(nameof(normalizedUserName))} " +
+                $"INNER {ROLE_ID_SELECTOR.ToJoinClause(RIGHT_ROLE_ID_SELECTOR)} " +
+                $"AND {RIGHT_ROLE_NAME_SELECTOR.ToKeyValuePair(roleName)}" +
+                $");",
+                new { normalizedUserName, roleName }));
+
+        public void RemoveUserFromRoleByUserId(string userId, string roleName) =>
+            AddOperation((connection, transaction) => connection.ExecuteAsync(
+                // Delete a user role
+                $"DELETE FROM {typeof(UserRole).ToTableName()} " +
+                // Join roles to user roles by role ID...
+                $"INNER {ROLE_ID_SELECTOR.ToJoinClause(RIGHT_ROLE_ID_SELECTOR)} " +
+                // ...whereever the role name matches the provided role name...
+                $"AND {RIGHT_ROLE_NAME_SELECTOR.ToKeyValuePair(nameof(roleName))} " +
+                // ...and the user ID matches the provided user ID
+                $"AND {USER_ID_SELECTOR.ToKeyValuePair(nameof(userId))};",
+                new { userId, roleName }, transaction));
+
+        public void RemoveUserFromRoleByNormalizedUserName(string normalizedUserName, string roleName) =>
+            AddOperation((connection, transaction) => connection.ExecuteAsync(
                 // Delete a user role
                 $"DELETE FROM {typeof(UserRole).ToTableName()} " +
                 // Join roles to user roles by role ID...
                 $"INNER {ROLE_ID_SELECTOR.ToJoinClause(RIGHT_ROLE_ID_SELECTOR)} " +
                 // ...whereever the role name matches the provided role name
-                $"AND {RIGHT_ROLE_NAME_SELECTOR.ToKeyValuePair(nameof(roleName))};"));
+                $"AND {RIGHT_ROLE_NAME_SELECTOR.ToKeyValuePair(nameof(roleName))} " +
+                // Join users to user roles by user ID...
+                $"INNER {USER_ID_SELECTOR.ToJoinClause(RIGHT_USER_ID_SELECTOR)} " +
+                // ...wherever the normalized user name matches the provided normalized user name
+                $"AND {RIGHT_NORMALIZED_USER_NAME_SELECTOR.ToKeyValuePair(nameof(normalizedUserName))};",
+                new { normalizedUserName, roleName }, transaction));
 
         public async Task AddUserToRole(string userId, string roleName)
         {
@@ -95,9 +136,9 @@ namespace WebdevPeriod3.Areas.Identity.Services
                 UserId = userId
             };
 
-            await WithConnection(connection => connection.ExecuteAsync(
+            AddOperation((connection, transaction) => connection.ExecuteAsync(
                 userRole.ToInsertQuery(),
-                userRole));
+                userRole, transaction));
         }
     }
 }

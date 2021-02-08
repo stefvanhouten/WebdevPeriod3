@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Diagnostics;
 using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Areas.Identity.Services;
 using WebdevPeriod3.Interfaces;
@@ -25,7 +26,11 @@ namespace WebdevPeriod3
         {
             services.AddMigrationRunner(Configuration.GetConnectionString("Master"));
 
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddScoped<DapperTransactionService>();
+
+            services.AddTransient<IProductCommandText, ProductCommandText>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+
             services.AddTransient<UserRepository>();
             services.AddTransient<RoleRepository>();
             services.AddTransient<UserRoleRepository>();
@@ -39,7 +44,7 @@ namespace WebdevPeriod3
             services.AddControllersWithViews(mvcOptions =>
             {
                 mvcOptions.EnableEndpointRouting = false;
-            });
+            }).AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,7 +87,20 @@ namespace WebdevPeriod3
 
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-                userManager.CreateAsync(new User("thomasio101"), "Test1234!").Wait();
+                var user = new User("bacon");
+
+                var task = userManager.CreateAsync(user, "Test1234!");
+
+                task.Wait();
+
+                foreach (var error in task.Result.Errors)
+                {
+                    Debug.WriteLine(error.Description);
+                }
+
+                var task2 = userManager.AddToRoleAsync(user, "Moderator");
+
+                task2.Wait();
             };
         }
     }
