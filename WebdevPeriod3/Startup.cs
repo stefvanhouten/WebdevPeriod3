@@ -73,13 +73,13 @@ namespace WebdevPeriod3
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "root",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-
-                routes.MapRoute(
-                  name: "areas",
+                  name: "Identity",
                   template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
+
+                routes.MapRoute(
+                    name: "root",
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
 
             // Update the database to the latest schema

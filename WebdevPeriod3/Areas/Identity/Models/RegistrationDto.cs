@@ -20,5 +20,7 @@ namespace WebdevPeriod3.Areas.Identity.Models
         [Display(Name = "Password (repeat)")]
         [DataType(DataType.Password)]
         public string RepeatPassword { get; set; }
+        [Display(Name = "Stay signed in")]
+        public bool RemainSignedIn { get; set; }
     }
 }

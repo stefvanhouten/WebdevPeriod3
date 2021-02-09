@@ -5,21 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Areas\Identity\Controllers\**" />
     <Compile Remove="Areas\Identity\Data\**" />
     <Compile Remove="Areas\Identity\Models\**" />
-    <Compile Remove="Areas\Identity\Views\**" />
-    <Content Remove="Areas\Identity\Controllers\**" />
     <Content Remove="Areas\Identity\Data\**" />
     <Content Remove="Areas\Identity\Models\**" />
-    <Content Remove="Areas\Identity\Views\**" />
-    <EmbeddedResource Remove="Areas\Identity\Controllers\**" />
     <EmbeddedResource Remove="Areas\Identity\Data\**" />
     <EmbeddedResource Remove="Areas\Identity\Models\**" />
-    <EmbeddedResource Remove="Areas\Identity\Views\**" />
-    <None Remove="Areas\Identity\Controllers\**" />
     <None Remove="Areas\Identity\Data\**" />
-    <None Remove="Areas\Identity\Views\**" />
   </ItemGroup>
 
   <ItemGroup>
