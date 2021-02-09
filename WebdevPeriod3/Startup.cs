@@ -39,7 +39,10 @@ namespace WebdevPeriod3
             services.AddAuthentication("Identity.Application")
                 .AddApplicationCookie();
 
-            services.AddIdentityCore<User>()
+            services.AddIdentityCore<User>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
                 .AddRoles<Role>()
                 .AddSignInManager();
 

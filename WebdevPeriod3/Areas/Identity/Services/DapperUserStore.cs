@@ -14,7 +14,7 @@ namespace WebdevPeriod3.Areas.Identity.Services
     /// <summary>
     /// A Dapper-based user store implementation
     /// </summary>
-    public class DapperUserStore : IUserPasswordStore<User>, IUserSecurityStampStore<User>, IUserRoleStore<User>
+    public class DapperUserStore : IUserEmailStore<User>, IUserPasswordStore<User>, IUserSecurityStampStore<User>, IUserRoleStore<User>
     {
         private readonly UserRepository _userRepository;
         private readonly UserRoleRepository _userRoleRepository;
@@ -73,11 +73,47 @@ namespace WebdevPeriod3.Areas.Identity.Services
         public void Dispose() { }
 
         // TODO: Add support for cancellation tokens
+        public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken) =>
+            _userRepository.FindByNormalizedEmail(normalizedEmail);
+
         public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken) =>
             _userRepository.FindById(userId);
 
         public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken) =>
             _userRepository.FindByNormalizedUserName(normalizedUserName);
+
+        public Task<string> GetEmailAsync(User user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.Email);
+        }
+
+        public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.EmailConfirmed);
+        }
+
+        public Task<string> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.NormalizedEmail);
+        }
 
         public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
         {
@@ -185,6 +221,42 @@ namespace WebdevPeriod3.Areas.Identity.Services
                         "The provided user has to have a non-null ID, normalized user name, or user name."),
                     roleName);
 
+            return Task.CompletedTask;
+        }
+
+        public Task SetEmailAsync(User user, string email, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            user.Email = email;
+            return Task.CompletedTask;
+        }
+
+        public Task SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            user.EmailConfirmed = confirmed;
+            return Task.CompletedTask;
+        }
+
+        public Task SetNormalizedEmailAsync(User user, string normalizedEmail, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            user.NormalizedEmail = normalizedEmail;
             return Task.CompletedTask;
         }
 

@@ -21,6 +21,7 @@ namespace WebdevPeriod3.Areas.Identity.Services
         }
 
         private static readonly Expression<Func<User, string>> ID_SELECTOR = user => user.Id;
+        private static readonly Expression<Func<User, string>> NORMALIZED_EMAIL_SELECTOR = user => user.NormalizedEmail;
         private static readonly Expression<Func<User, string>> NORMALIZED_USERNAME_SELECTOR = user => user.NormalizedUserName;
 
         public UserRepository(DapperTransactionService dapperTransactionService, IConfiguration configuration) : base(dapperTransactionService, configuration) { }
@@ -43,6 +44,12 @@ namespace WebdevPeriod3.Areas.Identity.Services
                 connection => connection.QueryFirstOrDefaultAsync<User>(
                     SqlHelper.CreateSelectWhereQuery(ID_SELECTOR, nameof(id)),
                     new { id }));
+
+        public Task<User> FindByNormalizedEmail(string normalizedEmail) =>
+            WithConnection(
+                connection => connection.QueryFirstOrDefaultAsync<User>(
+                    SqlHelper.CreateSelectWhereQuery(NORMALIZED_EMAIL_SELECTOR, nameof(normalizedEmail)),
+                    new { normalizedEmail }));
 
         public Task<User> FindByNormalizedUserName(string normalizedUserName) =>
             WithConnection(
