@@ -12,8 +12,6 @@ namespace WebdevPeriod3.Areas.Identity.Controllers
     [Area("Identity")]
     public class RegistrationController : Controller
     {
-        private const string GLOBAL_ERROR_KEY = "GLOBAL";
-
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
@@ -41,7 +39,7 @@ namespace WebdevPeriod3.Areas.Identity.Controllers
             if (!creationResult.Succeeded)
             {
                 foreach (var error in creationResult.Errors)
-                    ModelState.AddModelError(GLOBAL_ERROR_KEY, error.Description);
+                    ModelState.AddModelError(string.Empty, error.Description);
 
                 return View(nameof(Index), dto);
             }
