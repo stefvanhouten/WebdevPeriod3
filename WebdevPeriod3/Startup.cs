@@ -36,8 +36,12 @@ namespace WebdevPeriod3
             services.AddScoped<IUserStore<User>, DapperUserStore>();
             services.AddScoped<IRoleStore<Role>, DapperRoleStore>();
 
+            services.AddAuthentication("Identity.Application")
+                .AddApplicationCookie();
+
             services.AddIdentityCore<User>()
-                .AddRoles<Role>();
+                .AddRoles<Role>()
+                .AddSignInManager();
 
             services.AddControllersWithViews(mvcOptions =>
             {
@@ -63,6 +67,7 @@ namespace WebdevPeriod3
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseMvc(routes =>
