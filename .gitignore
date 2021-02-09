@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Client side libraries
+WebDevPeriod3/wwwroot/lib/**/*

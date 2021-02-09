@@ -1,4 +1,6 @@
-﻿@{
+﻿@model WebdevPeriod3.Areas.Identity.Models.RegistrationDto
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
     ViewData["Title"] = "Register";
 }
 <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v5.15.1/css/pro.min.css" />
@@ -13,7 +15,7 @@
         <div class="mt-10">
             <form action="#">
                 <div class="flex flex-col mb-6">
-                    <label for="userName" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">User Name:</label>
+                    <label asp-for="UserName" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"></label>
                     <div class="relative">
                         <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                             <svg class="h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -21,11 +23,12 @@
                             </svg>
                         </div>
 
-                        <input id="userName" type="text" name="userName" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="User Name" />
+                        <input asp-for="UserName" placeholder="@Html.DisplayNameFor(model => model.UserName)" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" />
                     </div>
+                    <span asp-validation-for="UserName" class="text-red-500"></span>
                 </div>
                 <div class="flex flex-col mb-6">
-                    <label for="email" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">E-Mail Address:</label>
+                    <label asp-for="Email" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"></label>
                     <div class="relative">
                         <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                             <svg class="h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -33,11 +36,12 @@
                             </svg>
                         </div>
 
-                        <input id="email" type="email" name="email" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="E-Mail Address" />
+                        <input asp-for="Email" placeholder="@Html.DisplayNameFor(model => model.Email)" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="E-Mail Address" />
                     </div>
+                    <span asp-validation-for="Email" class="text-red-500"></span>
                 </div>
                 <div class="flex flex-col mb-6">
-                    <label for="password" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">Password:</label>
+                    <label asp-for="Password" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"></label>
                     <div class="relative">
                         <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                             <span>
@@ -47,12 +51,13 @@
                             </span>
                         </div>
 
-                        <input id="password" type="password" name="password" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="Password" />
+                        <input asp-for="Password" placeholder="@Html.DisplayNameFor(model => model.Password)" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="Password" />
                     </div>
+                    <span asp-validation-for="Password" class="text-red-500"></span>
                 </div>
 
                 <div class="flex flex-col mb-6">
-                    <label for="passwordRepeat" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">Repeat password:</label>
+                    <label asp-for="RepeatPassword" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">Repeat password:</label>
                     <div class="relative">
                         <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                             <span>
@@ -62,8 +67,9 @@
                             </span>
                         </div>
 
-                        <input id="passwordRepeat" type="password" name="passwordRepeat" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="Repeat password" />
+                        <input asp-for="RepeatPassword" placeholder="@Html.DisplayNameFor(model => model.RepeatPassword)" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="Repeat password" />
                     </div>
+                    <span asp-validation-for="RepeatPassword" class="text-red-500"></span>
                 </div>
                 <div class="flex w-full">
                     <button type="submit" class="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-700 rounded py-2 w-full transition duration-150 ease-in">
