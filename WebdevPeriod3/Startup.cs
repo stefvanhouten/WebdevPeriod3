@@ -36,8 +36,15 @@ namespace WebdevPeriod3
             services.AddScoped<IUserStore<User>, DapperUserStore>();
             services.AddScoped<IRoleStore<Role>, DapperRoleStore>();
 
-            services.AddIdentityCore<User>()
-                .AddRoles<Role>();
+            services.AddAuthentication("Identity.Application")
+                .AddApplicationCookie();
+
+            services.AddIdentityCore<User>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
+                .AddRoles<Role>()
+                .AddSignInManager();
 
             services.AddControllersWithViews(mvcOptions =>
             {
@@ -63,18 +70,19 @@ namespace WebdevPeriod3
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "root",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-
-                routes.MapRoute(
-                  name: "areas",
+                  name: "Identity",
                   template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
+
+                routes.MapRoute(
+                    name: "root",
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
 
             // Update the database to the latest schema
