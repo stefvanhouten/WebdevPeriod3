@@ -73,7 +73,6 @@ namespace WebdevPeriod3.Controllers
         [Authorize]
         public async Task<IActionResult> Profile()
         {
-            //string tableName, string keyName, string valueName
             
             // RETRIEVE USER INFORMATION
             User user = await _userManager.GetUserAsync(User);
