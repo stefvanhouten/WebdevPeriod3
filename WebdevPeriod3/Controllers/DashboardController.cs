@@ -2,14 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Models;
+using WebdevPeriod3.Utilities;
 using WebdevPeriod3.ViewModels;
 
 namespace WebdevPeriod3.Controllers
 {
     public class DashboardController : Controller
     {
+
+        private readonly UserManager<Areas.Identity.Entities.User> _userManager;
+
+        public DashboardController(UserManager<Areas.Identity.Entities.User> userManager)
+        {
+            _userManager = userManager;
+        }
+
         public IActionResult Index()
         {
             List<RobotPost> robotPosts = new List<RobotPost>();
@@ -58,9 +70,24 @@ namespace WebdevPeriod3.Controllers
             return View(viewModel);
         }
 
-        public IActionResult Profile()
+        [Authorize]
+        public async Task<IActionResult> Profile()
         {
-            return View();
+            //string tableName, string keyName, string valueName
+            
+            // RETRIEVE USER INFORMATION
+            User user = await _userManager.GetUserAsync(User);
+            //user.UserName
+
+            //SELECT ALL THE POSTS USER CREATED
+            string SELECT = SqlHelper.CreateSelectWhereQuery("Products", "PosterId", $"{user.Id}");
+
+            ProfileViewModel viewModel = new ProfileViewModel()
+            {
+                UserInformation = user,
+
+            };
+            return View(viewModel);
         }
 
         public IActionResult CreatePost()

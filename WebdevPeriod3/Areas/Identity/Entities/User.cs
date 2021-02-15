@@ -14,5 +14,7 @@ namespace WebdevPeriod3.Areas.Identity.Entities
         public User() : base() { }
 
         public User(string userName) : base(userName) { }
+
+        public string Role { get; internal set; }
     }
 }

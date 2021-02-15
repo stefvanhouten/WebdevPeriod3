@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Models;
 using WebdevPeriod3.ViewModels;
 
