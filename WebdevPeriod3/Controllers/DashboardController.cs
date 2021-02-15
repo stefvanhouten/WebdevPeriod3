@@ -15,9 +15,9 @@ namespace WebdevPeriod3.Controllers
     public class DashboardController : Controller
     {
 
-        private readonly UserManager<Areas.Identity.Entities.User> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public DashboardController(UserManager<Areas.Identity.Entities.User> userManager)
+        public DashboardController(UserManager<User> userManager)
         {
             _userManager = userManager;
         }
