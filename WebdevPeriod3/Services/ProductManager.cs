@@ -8,6 +8,12 @@ namespace WebdevPeriod3.Services
 {
     public class ProductManager
     {
+        private readonly ProductRepository _productRepository;
+
+        public ProductManager(ProductRepository productRepository)
+        {
+            _productRepository = productRepository;
+        }
         public Task AddProduct(Product product)
         {
             throw new NotImplementedException();
@@ -19,15 +25,15 @@ namespace WebdevPeriod3.Services
         }
 
         public Task<IEnumerable<Product>> GetProductsByPosterId(string posterId) =>
-            // TODO: replace with actual implementation
-            Task.FromResult(Enumerable.Range(1, 10).Select(n => new Product()
-            {
-                Id = n.ToString(),
-                Name = $"Product {n}",
-                Description = $"Dit is product {n}",
-                CreatedAt = DateTime.Now,
-                PosterId = posterId,
-                ShowInCatalog = true
-            }));
+            _productRepository.FindProductsByPosterId(posterId);
+            //Task.FromResult(Enumerable.Range(1, 10).Select(n => new Product()
+            //{
+            //    Id = n.ToString(),
+            //    Name = $"Product {n}",
+            //    Description = $"Dit is product {n}",
+            //    CreatedAt = DateTime.Now,
+            //    PosterId = posterId,
+            //    ShowInCatalog = true
+            //}));
     }
 }
