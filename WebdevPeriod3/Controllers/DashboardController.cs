@@ -9,6 +9,7 @@ using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Models;
 using WebdevPeriod3.Utilities;
 using WebdevPeriod3.ViewModels;
+using WebdevPeriod3.Services;
 
 namespace WebdevPeriod3.Controllers
 {
@@ -16,10 +17,12 @@ namespace WebdevPeriod3.Controllers
     {
 
         private readonly UserManager<User> _userManager;
+        private readonly ProductManager _productManager;
 
-        public DashboardController(UserManager<User> userManager)
+        public DashboardController(UserManager<User> userManager, ProductManager productManager)
         {
             _userManager = userManager;
+            _productManager = productManager;
         }
 
         public IActionResult Index()
@@ -76,14 +79,11 @@ namespace WebdevPeriod3.Controllers
             
             // RETRIEVE USER INFORMATION
             User user = await _userManager.GetUserAsync(User);
-            //user.UserName
-
-            //SELECT ALL THE POSTS USER CREATED
-            string SELECT = SqlHelper.CreateSelectWhereQuery("Products", "PosterId", $"{user.Id}");
 
             ProfileViewModel viewModel = new ProfileViewModel()
             {
                 UserInformation = user,
+                OwnProducts = await _productManager.GetProductsByPosterId(user.Id)
 
             };
             return View(viewModel);

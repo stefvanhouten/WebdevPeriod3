@@ -36,6 +36,8 @@ namespace WebdevPeriod3
             services.AddScoped<IUserStore<User>, DapperUserStore>();
             services.AddScoped<IRoleStore<Role>, DapperRoleStore>();
 
+            services.AddScoped<ProductManager>();
+
             services.AddAuthentication("Identity.Application")
                 .AddApplicationCookie();
 

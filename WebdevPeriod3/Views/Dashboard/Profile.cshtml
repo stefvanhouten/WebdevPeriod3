@@ -77,10 +77,13 @@
                             <span class="tracking-wide">Posts</span>
                         </div>
                         <ul class="list-inside space-y-2">
-                            <li>
-                                <div class="text-teal-600">Robot0</div>
-                                <div class="text-gray-500 text-xs">02-02-2021</div>
-                            </li>
+                            @foreach (var product in Model.OwnProducts)
+                            {
+                                <li>
+                                    <div class="text-teal-600">@product.Name</div>
+                                    <div class="text-gray-500 text-xs">@product.CreatedAt.ToString("d-M-yyyy")</div>
+                                </li>
+                            }
                         </ul>
                     </div>
                 </div>
