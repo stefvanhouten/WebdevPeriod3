@@ -21,7 +21,7 @@ namespace WebdevPeriod3.Controllers
             List<User> users = new List<User>();
             for(int i = 0; i < 30; i++)
             {
-                users.Add(new User() { Email = $"JohnDoe{i}@gmail.com", Role = "Admin" });
+                users.Add(new User() { Email = $"JohnDoe{i}@gmail.com" });
             }
 
             AdminViewModel viewModel = new AdminViewModel()
