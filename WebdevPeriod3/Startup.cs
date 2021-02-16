@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebdevPeriod3.Areas.Identity.Entities;
+using WebdevPeriod3.Areas.Identity.Services;
 using WebdevPeriod3.Interfaces;
 using WebdevPeriod3.Services;
 
@@ -20,12 +23,33 @@ namespace WebdevPeriod3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IProductCommandText, ProductCommandText>();
-            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddMigrationRunner(Configuration.GetConnectionString("Master"));
 
-            services.AddTransient<IUserCommandText, UserCommandText>();
-            services.AddTransient<IUserRespoitory, UserRepository>();
-            services.AddControllersWithViews();
+            services.AddScoped<DapperTransactionService>();
+
+            services.AddTransient<IProductCommandText, ProductCommandText>();
+
+            services.AddScoped<UserRepository>();
+            services.AddScoped<RoleRepository>();
+            services.AddScoped<UserRoleRepository>();
+
+            services.AddScoped<IUserStore<User>, DapperUserStore>();
+            services.AddScoped<IRoleStore<Role>, DapperRoleStore>();
+
+            services.AddAuthentication("Identity.Application")
+                .AddApplicationCookie();
+
+            services.AddIdentityCore<User>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
+                .AddRoles<Role>()
+                .AddSignInManager();
+
+            services.AddControllersWithViews(mvcOptions =>
+            {
+                mvcOptions.EnableEndpointRouting = false;
+            }).AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,14 +70,27 @@ namespace WebdevPeriod3
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            app.UseMvc(routes =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute(
+                  name: "Identity",
+                  template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+
+                routes.MapRoute(
+                    name: "root",
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            // Update the database to the latest schema
+            {
+                using var scope = app.ApplicationServices.CreateScope();
+
+                scope.ServiceProvider.GetRequiredService<MigrationService>().UpdateDatabase();
+            }
         }
     }
 }

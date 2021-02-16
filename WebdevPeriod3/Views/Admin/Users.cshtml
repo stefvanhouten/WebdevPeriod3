@@ -1,0 +1,22 @@
+﻿@model WebdevPeriod3.ViewModels.AdminViewModel
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div class="p-5">
+    <table class="table table-fixed w-full text-left divide-y divide-gray-300">
+        <thead class="bg-yellow-800 shadow-lg">
+            <tr>
+                <th scope="col" class="w-1/3 p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">E-mail</th>
+                <th scope="col" class="w-2/4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">Group</th>
+                <th scope="col" class="w-1/6 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">Action</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            @foreach (User user in Model.Users)
+            {
+                @Html.Partial("_UserTableRow", user);
+            }
+        </tbody>
+    </table>
+</div>

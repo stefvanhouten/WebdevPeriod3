@@ -1,37 +1,47 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using WebdevPeriod3.Entities;
-using WebdevPeriod3.Interfaces;
-using WebdevPeriod3.Models;
+using WebdevPeriod3.Areas.Identity.Services;
+using WebdevPeriod3.ViewModels;
 
 namespace WebdevPeriod3.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IUserRespoitory _userRepository;
+        private readonly UserRepository _userRepository;
 
-        public HomeController(ILogger<HomeController> logger, IUserRespoitory productRepository)
+        public HomeController(ILogger<HomeController> logger, UserRepository userRepository)
         {
             _logger = logger;
-            _userRepository = productRepository;
-            this.GetAll();
+            _userRepository = userRepository;
         }
 
-        public async Task<ActionResult<User>> GetAll()
-        {
-            var users = await _userRepository.GetAllUsers();
-            return Ok(users);
-        }
-
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             return View();
         }
 
+
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+
+        //Should be moved to a auth controller
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        //[Authorize]
         public IActionResult Privacy()
         {
             return View();
