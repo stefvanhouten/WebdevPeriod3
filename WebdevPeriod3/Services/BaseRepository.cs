@@ -66,7 +66,7 @@ namespace WebdevPeriod3.Services
         {
             try
             {
-                await using (var connection = new SqlConnection(_connectionString))
+                await using (var connection = new MySqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
                     var data = await getData(connection);
