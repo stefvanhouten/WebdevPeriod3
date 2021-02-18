@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Entities;
 using WebdevPeriod3.Utilities;
 
