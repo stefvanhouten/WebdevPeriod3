@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebdevPeriod3.Entities;
+using WebdevPeriod3.Areas.Identity.Entities;
 
 namespace WebdevPeriod3.Services
 {
