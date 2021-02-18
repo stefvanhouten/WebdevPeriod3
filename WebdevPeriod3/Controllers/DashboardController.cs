@@ -10,6 +10,7 @@ using WebdevPeriod3.Models;
 using WebdevPeriod3.Utilities;
 using WebdevPeriod3.ViewModels;
 using WebdevPeriod3.Services;
+using WebdevPeriod3.Entities;
 
 namespace WebdevPeriod3.Controllers
 {
@@ -17,12 +18,15 @@ namespace WebdevPeriod3.Controllers
     {
 
         private readonly UserManager<User> _userManager;
-        private readonly ProductManager _productManager;
+        private readonly ProductRepository _productRepository;
+        private readonly DapperProductStore _dapperProductStore;
 
-        public DashboardController(UserManager<User> userManager, ProductManager productManager)
+
+        public DashboardController(UserManager<User> userManager, ProductRepository productRepository, DapperProductStore dapperProductStore)
         {
             _userManager = userManager;
-            _productManager = productManager;
+            _productRepository = productRepository;
+            _dapperProductStore = dapperProductStore;
         }
 
         public IActionResult Index()
@@ -78,12 +82,12 @@ namespace WebdevPeriod3.Controllers
         {
             
             // RETRIEVE USER INFORMATION
-            User user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
 
             ProfileViewModel viewModel = new ProfileViewModel()
             {
                 UserInformation = user,
-                OwnProducts = await _productManager.GetProductsByPosterId(user.Id)
+                OwnProducts = await _productRepository.FindProductsByPosterId(user.Id)
 
             };
             return View(viewModel);
@@ -92,6 +96,25 @@ namespace WebdevPeriod3.Controllers
         public IActionResult CreatePost()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct(ProductDto dto)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            Product product = new Product()
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                PosterId = user.Id,
+                ShowInCatalog = true,
+                CreatedAt = DateTime.Now
+            };
+
+            await _dapperProductStore.AddProductAsync(product);
+
+            return RedirectToAction("Index");
         }
     }
 }
