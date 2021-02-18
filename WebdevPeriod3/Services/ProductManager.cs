@@ -26,14 +26,14 @@ namespace WebdevPeriod3.Services
 
         public Task<IEnumerable<Product>> GetProductsByPosterId(string posterId) =>
             _productRepository.FindProductsByPosterId(posterId);
-            //Task.FromResult(Enumerable.Range(1, 10).Select(n => new Product()
-            //{
-            //    Id = n.ToString(),
-            //    Name = $"Product {n}",
-            //    Description = $"Dit is product {n}",
-            //    CreatedAt = DateTime.Now,
-            //    PosterId = posterId,
-            //    ShowInCatalog = true
-            //}));
+        //Task.FromResult(Enumerable.Range(1, 10).Select(n => new Product()
+        //{
+        //    Id = n.ToString(),
+        //    Name = $"Product {n}",
+        //    Description = $"Dit is product {n}",
+        //    CreatedAt = DateTime.Now,
+        //    PosterId = posterId,
+        //    ShowInCatalog = true
+        //}));
     }
 }
