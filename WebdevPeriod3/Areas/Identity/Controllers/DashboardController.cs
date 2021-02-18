@@ -13,7 +13,7 @@ using WebdevPeriod3.Services;
 
 namespace WebdevPeriod3.Controllers
 {
-    //TODO: Move this out of the identity folder but keep it inside the Areas.
+    [Area("Identity")]
     public class DashboardController : Controller
     {
 
@@ -73,22 +73,6 @@ namespace WebdevPeriod3.Controllers
             };
             return View(viewModel);
         }
-
-        //[Authorize]
-        //public async Task<IActionResult> Profile()
-        //{
-            
-        //    // RETRIEVE USER INFORMATION
-        //    User user = await _userManager.GetUserAsync(User);
-
-        //    ProfileViewModel viewModel = new ProfileViewModel()
-        //    {
-        //        UserInformation = user,
-        //        OwnProducts = await _productManager.GetProductsByPosterId(user.Id)
-
-        //    };
-        //    return View(viewModel);
-        //}
 
         public IActionResult CreatePost()
         {
