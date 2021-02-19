@@ -36,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Identity\Views\Dashboard\" />
     <Folder Include="Interfaces\" />
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>

@@ -13,7 +13,6 @@ using WebdevPeriod3.Services;
 
 namespace WebdevPeriod3.Controllers
 {
-    [Area("Identity")]
     public class DashboardController : Controller
     {
 
