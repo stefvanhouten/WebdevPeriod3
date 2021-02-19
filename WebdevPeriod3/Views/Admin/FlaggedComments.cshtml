@@ -16,7 +16,7 @@
         <tbody class="bg-white divide-y divide-gray-200">
             @foreach (var comment in Model.Comments)
             {
-                @Html.Partial("_FlaggedCommentTableRow", comment);
+                <partial name="_FlaggedCommentTableRow" model="comment" />
             }
         </tbody>
     </table>

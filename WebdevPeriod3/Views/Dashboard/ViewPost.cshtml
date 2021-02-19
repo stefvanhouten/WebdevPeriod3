@@ -15,7 +15,7 @@
     <div class="flex flex-wrap">
         @foreach (var image in Model.Images)
         {
-            @Html.Partial("_BlogImage", image);
+            <partial name="_BlogImage" model="image" />
         }
     </div>
 </div>

@@ -12,7 +12,7 @@
     <div class="grid grid-cols-1 gap-5 mt-6 sm:grid-cols-2 lg:grid-cols-2">
         @foreach (var post in Model.RobotPosts)
         {
-            @Html.Partial("_Post", post);
+            <partial name="_Post" model="post" />
         }
     </div>
 </div>
