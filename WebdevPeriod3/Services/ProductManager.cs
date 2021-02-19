@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebdevPeriod3.Areas.Identity.Entities;
+using WebdevPeriod3.Entities;
 
 namespace WebdevPeriod3.Services
 {
