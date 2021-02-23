@@ -1,10 +1,10 @@
-﻿@model WebdevPeriod3.Models.RobotPost
+﻿@model WebdevPeriod3.Entities.Product
 
 <div class="p-4 transition-shadow border rounded-lg shadow-sm hover:shadow-lg">
     <div class="flex items-start justify-between">
         <div class="flex flex-col space-y-2">
             <span class="text-gray-400">Total Robots</span>
-            <a asp-area="" asp-controller="Dashboard" asp-action="ViewPost" asp-route-ID=@Model.ID class="text-lg font-semibold">@Model.Name</a>
+            <a asp-area="" asp-controller="Dashboard" asp-action="ViewPost" asp-route-ID=@Model.Id class="text-lg font-semibold">@Model.Name</a>
             <span class="text-sm text-gray-400">@Model.Description</span>
         </div>
         <img src="~/images/robot.png" class="h-28 px py-2" alt="logo" />

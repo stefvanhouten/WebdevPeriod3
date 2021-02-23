@@ -29,11 +29,11 @@ namespace WebdevPeriod3.Controllers
             _dapperProductStore = dapperProductStore;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<RobotPost> robotPosts = new List<RobotPost>();
+            /* List<RobotPost> robotPosts = new List<RobotPost>();
 
-            for (int i = 0; i < 15; i++)
+             for (int i = 0; i < 15; i++)
             {
                 RobotPost post = new RobotPost()
                 {
@@ -43,11 +43,17 @@ namespace WebdevPeriod3.Controllers
                     Replies = i * 5,
                 };
                 robotPosts.Add(post);
-            }
+            }  */
+
+            var leProducts = await _productRepository.GetAllProducts();
+
+            List<Product> productPosts = leProducts.ToList();
+
 
             DashboardViewModel viewModel = new DashboardViewModel()
             {
-                RobotPosts = robotPosts
+                //RobotPosts = robotPosts
+                ProductPosts = productPosts
             };
 
             return View(viewModel);
