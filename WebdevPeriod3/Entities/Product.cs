@@ -8,17 +8,13 @@ namespace WebdevPeriod3.Entities
     /// </summary>
     public class Product
     {
-        public Product()
-        {
-            Comments = new List<Comment>();
-        }
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string PosterId { get; set; }
         public bool ShowInCatalog { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<Comment> Comments { get; set; }
-        public int Replies => Comments.Count();
+        public int Replies = 0;
+        //public int Replies => Comments.Count();
     }
 }

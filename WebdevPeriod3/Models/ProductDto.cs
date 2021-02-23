@@ -11,5 +11,7 @@ namespace WebdevPeriod3.Models
 		[Required(AllowEmptyStrings = false)]
 		public string Name { get; set; }
 		public string Description { get; set; }
+		[Required]
+		public bool TermsGDPR { get; set; }
 	}
 }

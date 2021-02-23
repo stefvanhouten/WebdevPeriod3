@@ -107,7 +107,21 @@ namespace WebdevPeriod3.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductDto dto)
         {
+            const string NOT_SIGNED_IN_ERROR = "Not logged in";
+            const string NOT_AGREED_TO_TERMS = "Must agree to terms";
+
             var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, NOT_SIGNED_IN_ERROR);
+                return View(nameof(CreatePost), dto);
+            }
+            if (dto.TermsGDPR == false)
+            {
+                ModelState.AddModelError(string.Empty, NOT_AGREED_TO_TERMS);
+                return View(nameof(CreatePost), dto);
+            }
 
             Product product = new Product()
             {

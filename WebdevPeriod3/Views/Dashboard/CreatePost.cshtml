@@ -2,12 +2,14 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-	ViewData["Title"] = "Create post"; 
+    ViewData["Title"] = "Create post";
 }
 
 <div class="flex flex-col w-full p-5">
     <form method="post" action="CreateProduct" class="form bg-white p-6 my-10 relative">
+        @Html.ValidationSummary(true, null, new { @class = "text-red-500" })
         <h3 class="text-xl text-gray-900 font-semibold">Create new post</h3>
+        <span asp-validation-for="Name" class="text-red-500"></span>
         <div class="flex space-x-5 mt-3">
             <input asp-for="Name" type="text" placeholder="Title" class="border p-2  w-full">
         </div>
@@ -29,9 +31,10 @@
                 <p class="">Select Files</p>
             </div>
         </div>
+        <span asp-validation-for="TermsGDPR" class="text-red-500"></span>
         <p class="font-bold text-sm mt-3">GDPR Agreement *</p>
         <div class="flex items-baseline space-x-2 mt-2">
-            <input type="checkbox" name="" id="" class="inline-block">
+            <input asp-for="TermsGDPR" type="checkbox" class="inline-block">
             <p class="text-gray-600 text-sm">I consent.</p>
         </div>
         <input type="submit" value="Submit" class="w-full mt-6 bg-blue-600 hover:bg-blue-500 text-white font-semibold p-3">

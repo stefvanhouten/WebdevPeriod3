@@ -14,7 +14,8 @@ namespace WebdevPeriod3.Migrations
                 .WithColumn("Description").AsString().Nullable()
                 .WithColumn("PosterId").AsString().Nullable().ForeignKey("Users", "Id").OnDelete(System.Data.Rule.SetNull)
                 .WithColumn("ShowInCatalog").AsBoolean().WithDefaultValue(false)
-                .WithColumn("CreatedAt").AsDateTime();
+                .WithColumn("CreatedAt").AsDateTime()
+                .WithColumn("Comments").AsInt32();
 
             // Create a table called "ProductRelations"
             Create.Table("ProductRelations")

@@ -11,8 +11,6 @@ namespace WebdevPeriod3.Services
 {
 	public class ProductRepository : TransactionRepositoryBase
 	{
-		private readonly DapperTransactionService _dapperTransactionService;
-
 		private static readonly Expression<Func<Product, string>> POSTER_ID_SELECTOR = product => product.PosterId;
 		private static readonly Expression<Func<Product, string>> ID_SELECTOR = product => product.Id;
 		public ProductRepository(DapperTransactionService dapperTransactionService, IConfiguration configuration) : base(dapperTransactionService, configuration)
