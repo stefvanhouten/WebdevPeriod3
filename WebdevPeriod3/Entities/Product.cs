@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
+using WebdevPeriod3.Services;
 namespace WebdevPeriod3.Entities
 {
     /// <summary>
@@ -14,7 +16,5 @@ namespace WebdevPeriod3.Entities
         public string PosterId { get; set; }
         public bool ShowInCatalog { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int Replies = 0;
-        //public int Replies => Comments.Count();
     }
 }

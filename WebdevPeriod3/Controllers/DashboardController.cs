@@ -31,20 +31,6 @@ namespace WebdevPeriod3.Controllers
 
         public async Task<IActionResult> Index()
         {
-            /* List<RobotPost> robotPosts = new List<RobotPost>();
-
-             for (int i = 0; i < 15; i++)
-            {
-                RobotPost post = new RobotPost()
-                {
-                    ID = i,
-                    Name = $"Robot{i}",
-                    Description = "Some description",
-                    Replies = i * 5,
-                };
-                robotPosts.Add(post);
-            }  */
-
             var leProducts = await _productRepository.GetAllProducts();
 
             List<Product> productPosts = leProducts.ToList();
@@ -52,7 +38,6 @@ namespace WebdevPeriod3.Controllers
 
             DashboardViewModel viewModel = new DashboardViewModel()
             {
-                //RobotPosts = robotPosts
                 ProductPosts = productPosts
             };
 
@@ -109,6 +94,7 @@ namespace WebdevPeriod3.Controllers
         {
             const string NOT_SIGNED_IN_ERROR = "Not logged in";
             const string NOT_AGREED_TO_TERMS = "Must agree to terms";
+            const string NO_SUBSYSTEMS = "Must have at least 2 subsystems";
 
             var user = await _userManager.GetUserAsync(User);
 
@@ -117,6 +103,11 @@ namespace WebdevPeriod3.Controllers
                 ModelState.AddModelError(string.Empty, NOT_SIGNED_IN_ERROR);
                 return View(nameof(CreatePost), dto);
             }
+            /* if (dto.SubSystems.Count() < 2)
+            {
+                ModelState.AddModelError(string.Empty, NO_SUBSYSTEMS);
+                return View(nameof(CreatePost), dto);
+            } */
             if (dto.TermsGDPR == false)
             {
                 ModelState.AddModelError(string.Empty, NOT_AGREED_TO_TERMS);
