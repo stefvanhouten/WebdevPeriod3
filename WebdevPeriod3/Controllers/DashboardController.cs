@@ -94,7 +94,7 @@ namespace WebdevPeriod3.Controllers
         {
             const string NOT_SIGNED_IN_ERROR = "Not logged in";
             const string NOT_AGREED_TO_TERMS = "Must agree to terms";
-            const string NO_SUBSYSTEMS = "Must have at least 2 subsystems";
+            //const string NO_SUBSYSTEMS = "Must have at least 2 subsystems";
 
             var user = await _userManager.GetUserAsync(User);
 
