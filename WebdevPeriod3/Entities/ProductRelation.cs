@@ -1,6 +1,4 @@
-﻿using WebdevPeriod3.Areas.Identity.Entities;
-
-namespace WebdevPeriod3.Entities
+﻿namespace WebdevPeriod3.Entities
 {
     /// <summary>
     /// Represents a relationship between a product and a nested product (a subproduct)
