@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Entities;
 
