@@ -11,7 +11,6 @@ namespace WebdevPeriod3.Areas.Identity.Controllers
     [Area("Identity")]
     public class ProfileController : Controller
     {
-
         private readonly UserManager<User> _userManager;
         private readonly ProductManager _productManager;
 
@@ -19,13 +18,11 @@ namespace WebdevPeriod3.Areas.Identity.Controllers
         {
             _userManager = userManager;
             _productManager = productManager;
-
         }
 
         [Authorize]
         public async Task<IActionResult> Index()
         {
-
             // RETRIEVE USER INFORMATION
             User user = await _userManager.GetUserAsync(User);
 
@@ -34,6 +31,7 @@ namespace WebdevPeriod3.Areas.Identity.Controllers
                 UserInformation = user,
                 OwnProducts = await _productManager.GetProductsByPosterId(user.Id)
             };
+
             return View(profileDto);
         }
     }
