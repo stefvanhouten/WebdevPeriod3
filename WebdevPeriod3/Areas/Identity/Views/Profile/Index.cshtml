@@ -1,4 +1,5 @@
-﻿@{
+﻿@model WebdevPeriod3.Areas.Identity.Models.ProfileDto;
+@{
     ViewData["Title"] = "Privacy Policy";
 }
 
@@ -49,17 +50,13 @@
                 <div class="text-gray-700">
                     <div class="grid md:grid-cols-2 text-sm">
                         <div class="grid grid-cols-2">
-                            <div class="px-4 py-2 font-semibold">First Name</div>
-                            <div class="px-4 py-2">Jane</div>
+                            <div class="px-4 py-2 font-semibold">User Name:</div>
+                            <div class="px-4 py-2">@Model.UserInformation.UserName</div>
                         </div>
                         <div class="grid grid-cols-2">
-                            <div class="px-4 py-2 font-semibold">Last Name</div>
-                            <div class="px-4 py-2">Doe</div>
-                        </div>
-                        <div class="grid grid-cols-2">
-                            <div class="px-4 py-2 font-semibold">Email.</div>
+                            <div class="px-4 py-2 font-semibold">Email:</div>
                             <div class="px-4 py-2">
-                                <p class="text-blue-800">jane@example.com</p>
+                                <p class="text-blue-800">@Model.UserInformation.Email</p>
                             </div>
                         </div>
                     </div>
@@ -80,10 +77,13 @@
                             <span class="tracking-wide">Posts</span>
                         </div>
                         <ul class="list-inside space-y-2">
-                            <li>
-                                <div class="text-teal-600">Robot0</div>
-                                <div class="text-gray-500 text-xs">02-02-2021</div>
-                            </li>
+                            @foreach (var product in Model.OwnProducts)
+                            {
+                                <li>
+                                    <div class="text-teal-600">@product.Name</div>
+                                    <div class="text-gray-500 text-xs">@product.CreatedAt.ToString("d-M-yyyy")</div>
+                                </li>
+                            }
                         </ul>
                     </div>
                 </div>

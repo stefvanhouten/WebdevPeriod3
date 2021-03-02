@@ -2,14 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Models;
+using WebdevPeriod3.Utilities;
 using WebdevPeriod3.ViewModels;
+using WebdevPeriod3.Services;
 
 namespace WebdevPeriod3.Controllers
 {
     public class DashboardController : Controller
     {
+
+        private readonly UserManager<User> _userManager;
+        private readonly ProductManager _productManager;
+
+        public DashboardController(UserManager<User> userManager, ProductManager productManager)
+        {
+            _userManager = userManager;
+            _productManager = productManager;
+        }
+
         public IActionResult Index()
         {
             List<RobotPost> robotPosts = new List<RobotPost>();
@@ -56,11 +71,6 @@ namespace WebdevPeriod3.Controllers
                 Images = images
             };
             return View(viewModel);
-        }
-
-        public IActionResult Profile()
-        {
-            return View();
         }
 
         public IActionResult CreatePost()

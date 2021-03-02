@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Models;
 using WebdevPeriod3.ViewModels;
 
@@ -20,7 +21,7 @@ namespace WebdevPeriod3.Controllers
             List<User> users = new List<User>();
             for(int i = 0; i < 30; i++)
             {
-                users.Add(new User() { Email = $"JohnDoe{i}@gmail.com", Role = "Admin" });
+                users.Add(new User() { Email = $"JohnDoe{i}@gmail.com" });
             }
 
             AdminViewModel viewModel = new AdminViewModel()

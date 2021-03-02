@@ -13,9 +13,9 @@
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-            @foreach (User user in Model.Users)
+            @foreach (var user in Model.Users)
             {
-                @Html.Partial("_UserTableRow", user);
+                <partial name="_UserTableRow" model="user" />
             }
         </tbody>
     </table>
