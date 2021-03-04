@@ -1,37 +1,18 @@
 ﻿<nav class="flex items-center justify-between flex-wrap bg-yellow-800 h-auto p-4 w-full z-10 pin-t">
+    <!--Logo-->
     <div class="flex items-center flex-no-shrink text-white mr-6">
         <a class="text-white no-underline hover:text-white hover:no-underline" href="#">
             <img src="~/images/bb-8.png" width="40" height="40" alt="logo" />
         </a>
     </div>
+    <!--Menu button (Hidden on large screens)-->
     <div class="block lg:hidden">
         <button id="nav-toggle" class="flex items-center px-3 py-2 border rounded text-grey border-grey-dark focus:outline-none hover:text-white hover:border-white">
             <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" /></svg>
         </button>
     </div>
+    <!--Nav bar content (Only visible on large screens)-->
     <div class="w-full lg:flex-grow lg:flex lg:items-center lg:w-auto lg:block pt-6 lg:pt-0 lg:visible hidden">
-        <ul class="list-reset lg:flex justify-end flex-1 items-center">
-            <li class="dropdown relative inline-block text-white no-underline">
-                <button href="#" class="inline-block p-3 text-gray-300 hover:text-gray-100 focus:outline-none" id="dropdown">Admin</button>
-                <div class="bg-yellow-800 hidden absolute p-1 shadow-lg z-10" id="dropdown-content">
-                    <a asp-area="" asp-controller="Admin" asp-action="Users" class="inline-block p-3 text-gray-300 hover:text-gray-100">Users</a>
-                    <a asp-area="" asp-controller="Admin" asp-action="FlaggedComments" class="inline-block p-3 text-gray-300 hover:text-gray-100">Reports</a>
-                </div>
-            </li>
-
-            <li class="mr-1">
-                <a asp-controller="Dashboard" asp-action="Index" class="inline-block p-3 text-gray-300 hover:text-gray-100">Dashboard</a>
-            </li>
-            <li class="mr-1">
-                <a asp-area="Identity" asp-controller="Login" asp-action="Index" class="inline-block p-3 text-gray-300 hover:text-gray-100">Login</a>
-            </li>
-            <li class="mr-1">
-                <a asp-area="Identity" asp-controller="Profile" asp-action="Index" class="text-gray-300 hover:text-gray-100 flex">
-                    <span class="mr-1">Username</span>
-                    <img class="h-6 rounded-full"
-                         src="~/images/bb-8.png">
-                </a>
-            </li>
-        </ul>
+        <partial name="_Navigation" />
     </div>
 </nav>
