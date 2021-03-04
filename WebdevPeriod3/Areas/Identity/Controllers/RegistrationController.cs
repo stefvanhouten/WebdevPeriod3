@@ -18,7 +18,7 @@ namespace WebdevPeriod3.Areas.Identity.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Index() => View();
+        public IActionResult Index([FromQuery] string returnUrl) => View(new RegistrationDto(returnUrl));
 
         [HttpPost]
         public async Task<IActionResult> Register([FromForm] RegistrationDto dto)
@@ -43,7 +43,10 @@ namespace WebdevPeriod3.Areas.Identity.Controllers
 
             await _signInManager.SignInAsync(user, dto.RemainSignedIn);
 
-            return RedirectToAction("Index", "Home", new { area = "" });
+            if (dto.ReturnUrl != null)
+                return Redirect(dto.ReturnUrl);
+            else
+                return RedirectToAction("Index", "Home", new { area = "" });
         }
     }
 }
