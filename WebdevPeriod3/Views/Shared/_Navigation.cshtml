@@ -1,0 +1,29 @@
+﻿<ul class="list-reset flex flex-1 items-center sm:flex-col lg:flex-row lg:justify-end">
+    <!--Dropdown for admin pages-->
+    <li class="dropdown relative inline-block text-white no-underlined">
+        <button href="#" class="inline-block p-3 text-gray-300 hover:text-gray-100 focus:outline-none dropdown-toggle">Admin</button>
+        <div class="bg-yellow-800 hidden absolute p-1 shadow-lg z-10 dropdown-content">
+            <!--Link to the user managment page (Admin)-->
+            <a asp-area="" asp-controller="Admin" asp-action="Users" class="inline-block p-3 text-gray-300 hover:text-gray-100">Users</a>
+            <!--Link to the flagged comments page (Admin)-->
+            <a asp-area="" asp-controller="Admin" asp-action="FlaggedComments" class="inline-block p-3 text-gray-300 hover:text-gray-100">Reports</a>
+        </div>
+    </li>
+
+    <!--Link to the dashboard-->
+    <li class="mr-1">
+        <a asp-controller="Dashboard" asp-action="Index" class="inline-block p-3 text-gray-300 hover:text-gray-100">Dashboard</a>
+    </li>
+    <!--Link to the login page-->
+    <li class="mr-1">
+        <a asp-area="Identity" asp-controller="Login" asp-action="Index" class="inline-block p-3 text-gray-300 hover:text-gray-100">Login</a>
+    </li>
+    <!--Link to the profile page-->
+    <li class="mr-1">
+        <a asp-area="Identity" asp-controller="Profile" asp-action="Index" class="text-gray-300 hover:text-gray-100 flex">
+            <span class="mr-1">Username</span>
+            <img class="h-6 rounded-full"
+                 src="~/images/bb-8.png">
+        </a>
+    </li>
+</ul>
