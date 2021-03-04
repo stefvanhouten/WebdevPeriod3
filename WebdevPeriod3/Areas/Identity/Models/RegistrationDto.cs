@@ -4,6 +4,10 @@ namespace WebdevPeriod3.Areas.Identity.Models
 {
     public class RegistrationDto
     {
+        public RegistrationDto() { }
+
+        public RegistrationDto(string returnUrl) : this() => ReturnUrl = returnUrl;
+
         [Required(AllowEmptyStrings = false)]
         [Display(Name = "User Name")]
         public string UserName { get; set; }
@@ -22,5 +26,6 @@ namespace WebdevPeriod3.Areas.Identity.Models
         public string RepeatPassword { get; set; }
         [Display(Name = "Stay signed in")]
         public bool RemainSignedIn { get; set; }
+        public string ReturnUrl { get; set; }
     }
 }
