@@ -50,6 +50,11 @@ namespace WebdevPeriod3
                 .AddRoles<Role>()
                 .AddSignInManager();
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Login";
+            });
+
             services.AddControllersWithViews(mvcOptions =>
             {
                 mvcOptions.EnableEndpointRouting = false;
