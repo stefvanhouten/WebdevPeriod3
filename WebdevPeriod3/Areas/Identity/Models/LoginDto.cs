@@ -6,10 +6,7 @@ namespace WebdevPeriod3.Areas.Identity.Models
     {
         public LoginDto() { }
 
-        public LoginDto(string returnUrl) : this()
-        {
-            ReturnUrl = returnUrl;
-        }
+        public LoginDto(string returnUrl) : this() => ReturnUrl = returnUrl;
 
         [Required(AllowEmptyStrings = false)]
         [Display(Name = "Email Address")]
