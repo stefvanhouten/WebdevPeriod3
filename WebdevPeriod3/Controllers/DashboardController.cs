@@ -126,7 +126,7 @@ namespace WebdevPeriod3.Controllers
 
             await _dapperProductStore.AddProductAsync(product);
 
-            foreach (string Subsystem in dto.Subsystems)
+            foreach (string Subsystem in dto.SubSystems)
             {
                 var productRelation = new ProductRelation()
                 {
