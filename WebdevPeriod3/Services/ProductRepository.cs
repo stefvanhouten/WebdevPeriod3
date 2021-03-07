@@ -18,13 +18,18 @@ namespace WebdevPeriod3.Services
         {
         }
 
-        public void Add(Product product)
+        public void AddProduct(Product product)
         {
             if (product.Id == null)
                 product.Id = Guid.NewGuid().ToString("N");
 
             AddOperation(
                (connection, transaction) => connection.ExecuteAsync(product.ToInsertQuery(), product, transaction));
+        }
+        public void AddSubProduct(ProductRelation productRelation)
+        {
+            AddOperation(
+               (connection, transaction) => connection.ExecuteAsync(productRelation.ToInsertQuery(), productRelation, transaction));
         }
         public void Delete(Product product)
         {
@@ -46,7 +51,7 @@ namespace WebdevPeriod3.Services
                 connection => connection.QueryAsync<Product>(
                     $"{typeof(Product).ToSelectQuery()} " +
                     $"WHERE {NAME_SELECTOR.ToColumnName() } " +
-                    $"LIKE '%@{nameof(searchTerm)}%';",
+                    $"LIKE '%{searchTerm}%';",
                     new { searchTerm })
                 );
     }

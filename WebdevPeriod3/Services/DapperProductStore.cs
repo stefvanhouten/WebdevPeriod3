@@ -22,7 +22,14 @@ namespace WebdevPeriod3.Services
 
         public async Task AddProductAsync(Product product)
         {
-            _productRepository.Add(product);
+            _productRepository.AddProduct(product);
+
+            await _dapperTransactionService.RunOperations();
+        }
+
+        public async Task AddSubProductAsync(ProductRelation productRelation)
+        {
+            _productRepository.AddSubProduct(productRelation);
 
             await _dapperTransactionService.RunOperations();
         }

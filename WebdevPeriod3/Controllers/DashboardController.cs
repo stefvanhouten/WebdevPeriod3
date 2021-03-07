@@ -114,8 +114,9 @@ namespace WebdevPeriod3.Controllers
                 return View(nameof(CreatePost), dto);
             }
 
-            Product product = new Product()
+            var product = new Product()
             {
+                Id = Guid.NewGuid().ToString("N"),
                 Name = dto.Name,
                 Description = dto.Description,
                 PosterId = user.Id,
@@ -124,6 +125,17 @@ namespace WebdevPeriod3.Controllers
             };
 
             await _dapperProductStore.AddProductAsync(product);
+
+            foreach (string Subsystem in dto.Subsystems)
+            {
+                var productRelation = new ProductRelation()
+                {
+                    ProductId = product.Id,
+                    SubProductId = Subsystem
+                };
+
+                await _dapperProductStore.AddSubProductAsync(productRelation);
+            }
 
             return RedirectToAction("Index");
         }
