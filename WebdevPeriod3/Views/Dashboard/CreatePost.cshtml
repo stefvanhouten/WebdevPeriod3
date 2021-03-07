@@ -4,7 +4,6 @@
 @{
     ViewData["Title"] = "Create post";
 }
-<script src="~/js/subsystemlist.js" asp-append-version="true"></script>
 
 <div class="flex flex-col w-full p-5">
     <form method="post" action="CreateProduct" class="form bg-white p-6 my-10 relative">
@@ -21,6 +20,9 @@
             <input id="search-input" placeholder="Name of subsystem" class="border p-2 w-full mt-3">
             <button type="button" id="add-system" class="bg-blue-600 text-white font-semibold border">New</button>
             <ul id="search-output"></ul>
+            <div id="subsystems">
+
+            </div>
         </div>
         <textarea asp-for="Description" cols="10" rows="10" placeholder="Content" class="border p-2 mt-3 w-full"></textarea>
         <div class="border border-dashed border-gray-500 relative mt-3">
@@ -44,3 +46,8 @@
     </form>
 
 </div>
+
+@section Scripts {
+    <script src="~/lib/rxjs/rxjs.umd.min.js"></script>
+    <script src="~/js/subsystemlist.js"></script>
+}
