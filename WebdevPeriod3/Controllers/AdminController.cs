@@ -11,11 +11,6 @@ namespace WebdevPeriod3.Controllers
 {
     public class AdminController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         public IActionResult Users()
         {
             List<User> users = new List<User>();
