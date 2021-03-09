@@ -20,16 +20,21 @@ namespace WebdevPeriod3.Services
             _dapperTransactionService = dapperTransactionService;
         }
 
+        private void AddProduct(Product product) => _productRepository.AddProduct(product);
+
         public async Task AddProductAsync(Product product)
         {
-            _productRepository.AddProduct(product);
+            AddProduct(product);
 
             await _dapperTransactionService.RunOperations();
         }
 
-        public async Task AddSubProductAsync(ProductRelation productRelation)
+        public async Task AddProductAsync(Product product, IEnumerable<ProductRelation> productRelations)
         {
-            _productRepository.AddSubProduct(productRelation);
+            AddProduct(product);
+
+            foreach (var productRelation in productRelations)
+                _productRepository.AddSubProduct(productRelation);
 
             await _dapperTransactionService.RunOperations();
         }
