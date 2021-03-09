@@ -19,7 +19,7 @@ namespace WebdevPeriod3.Controllers
             _userRepository = userRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }
