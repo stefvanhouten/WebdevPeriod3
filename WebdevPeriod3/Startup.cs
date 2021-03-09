@@ -34,11 +34,10 @@ namespace WebdevPeriod3
             services.AddScoped<UserRoleRepository>();
 
             services.AddScoped<ProductRepository>();
+            services.AddScoped<DapperProductStore>();
 
             services.AddScoped<IUserStore<User>, DapperUserStore>();
             services.AddScoped<IRoleStore<Role>, DapperRoleStore>();
-
-            services.AddScoped<ProductManager>();
 
             services.AddAuthentication("Identity.Application")
                 .AddApplicationCookie();
@@ -59,6 +58,8 @@ namespace WebdevPeriod3
             {
                 mvcOptions.EnableEndpointRouting = false;
             }).AddRazorRuntimeCompilation();
+
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

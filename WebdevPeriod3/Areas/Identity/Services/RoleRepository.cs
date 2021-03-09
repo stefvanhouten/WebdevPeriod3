@@ -13,7 +13,7 @@ namespace WebdevPeriod3.Areas.Identity.Services
     {
         public class DuplicateRoleNameException : ArgumentException
         {
-            public DuplicateRoleNameException() : base("Ä role with the provided role name already exists.") { }
+            public DuplicateRoleNameException() : base("A role with the provided role name already exists.") { }
         }
 
         private static readonly Expression<Func<Role, string>> ID_SELECTOR = role => role.Id;

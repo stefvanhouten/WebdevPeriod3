@@ -12,12 +12,12 @@ namespace WebdevPeriod3.Areas.Identity.Controllers
     public class ProfileController : Controller
     {
         private readonly UserManager<User> _userManager;
-        private readonly ProductManager _productManager;
+        private readonly ProductRepository _productRepository;
 
-        public ProfileController(UserManager<User> userManager, ProductManager productManager)
+        public ProfileController(UserManager<User> userManager, ProductRepository productManager)
         {
             _userManager = userManager;
-            _productManager = productManager;
+            _productRepository = productManager;
         }
 
         [Authorize]
@@ -29,7 +29,7 @@ namespace WebdevPeriod3.Areas.Identity.Controllers
             ProfileDto profileDto = new ProfileDto()
             {
                 UserInformation = user,
-                OwnProducts = await _productManager.GetProductsByPosterId(user.Id)
+                OwnProducts = await _productRepository.FindProductsByPosterId(user.Id)
             };
 
             return View(profileDto);

@@ -10,6 +10,7 @@ using WebdevPeriod3.Models;
 using WebdevPeriod3.Utilities;
 using WebdevPeriod3.ViewModels;
 using WebdevPeriod3.Services;
+using WebdevPeriod3.Entities;
 
 namespace WebdevPeriod3.Controllers
 {
@@ -17,33 +18,27 @@ namespace WebdevPeriod3.Controllers
     {
 
         private readonly UserManager<User> _userManager;
-        private readonly ProductManager _productManager;
+        private readonly ProductRepository _productRepository;
+        private readonly DapperProductStore _dapperProductStore;
 
-        public DashboardController(UserManager<User> userManager, ProductManager productManager)
+
+        public DashboardController(UserManager<User> userManager, ProductRepository productRepository, DapperProductStore dapperProductStore)
         {
             _userManager = userManager;
-            _productManager = productManager;
+            _productRepository = productRepository;
+            _dapperProductStore = dapperProductStore;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<RobotPost> robotPosts = new List<RobotPost>();
+            var leProducts = await _productRepository.GetAllProducts();
 
-            for (int i = 0; i < 15; i++)
-            {
-                RobotPost post = new RobotPost()
-                {
-                    ID = i,
-                    Name = $"Robot{i}",
-                    Description = "Some description",
-                    Replies = i * 5,
-                };
-                robotPosts.Add(post);
-            }
+            List<Product> productPosts = leProducts.ToList();
+
 
             DashboardViewModel viewModel = new DashboardViewModel()
             {
-                RobotPosts = robotPosts
+                ProductPosts = productPosts
             };
 
             return View(viewModel);
@@ -76,6 +71,57 @@ namespace WebdevPeriod3.Controllers
         public IActionResult CreatePost()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct(ProductDto dto)
+        {
+            const string NOT_SIGNED_IN_ERROR = "Not logged in";
+            const string NOT_AGREED_TO_TERMS = "Must agree to terms";
+            //const string NO_SUBSYSTEMS = "Must have at least 2 subsystems";
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, NOT_SIGNED_IN_ERROR);
+                return View(nameof(CreatePost), dto);
+            }
+            /* if (dto.SubSystems.Count() < 2)
+            {
+                ModelState.AddModelError(string.Empty, NO_SUBSYSTEMS);
+                return View(nameof(CreatePost), dto);
+            } */
+            if (dto.TermsGDPR == false)
+            {
+                ModelState.AddModelError(string.Empty, NOT_AGREED_TO_TERMS);
+                return View(nameof(CreatePost), dto);
+            }
+
+            var product = new Product()
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Name = dto.Name,
+                Description = dto.Description,
+                PosterId = user.Id,
+                ShowInCatalog = true,
+                CreatedAt = DateTime.Now
+            };
+
+            await _dapperProductStore.AddProductAsync(product);
+
+            foreach (string Subsystem in dto.SubSystems)
+            {
+                var productRelation = new ProductRelation()
+                {
+                    ProductId = product.Id,
+                    SubProductId = Subsystem
+                };
+
+                await _dapperProductStore.AddSubProductAsync(productRelation);
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }
