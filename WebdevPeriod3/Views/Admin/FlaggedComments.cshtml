@@ -1,8 +1,8 @@
 ﻿@model WebdevPeriod3.ViewModels.AdminViewModel
-
 @{
     ViewData["Title"] = "Flagged comments";
 }
+
 <div class="p-5">
     <table class="table table-fixed w-full text-left divide-y divide-gray-300">
         <thead class="bg-yellow-800 shadow-lg">
@@ -14,9 +14,9 @@
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-            @foreach (Comment comment in Model.Comments)
+            @foreach (var comment in Model.Comments)
             {
-                @Html.Partial("_FlaggedCommentTableRow", comment);
+                <partial name="_FlaggedCommentTableRow" model="comment" />
             }
         </tbody>
     </table>

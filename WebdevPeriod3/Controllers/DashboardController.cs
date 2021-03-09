@@ -68,22 +68,6 @@ namespace WebdevPeriod3.Controllers
             return View(viewModel);
         }
 
-        [Authorize]
-        public async Task<IActionResult> Profile()
-        {
-            
-            // RETRIEVE USER INFORMATION
-            var user = await _userManager.GetUserAsync(User);
-
-            ProfileViewModel viewModel = new ProfileViewModel()
-            {
-                UserInformation = user,
-                OwnProducts = await _productRepository.FindProductsByPosterId(user.Id)
-
-            };
-            return View(viewModel);
-        }
-
         public IActionResult CreatePost()
         {
             return View();

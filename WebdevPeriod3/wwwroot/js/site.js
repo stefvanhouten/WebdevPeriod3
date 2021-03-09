@@ -1,9 +1,9 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("nav-toggle").addEventListener("click", () => {
-        document.getElementById("side-nav").classList.toggle("hidden");
+﻿$(() => {
+    $("#nav-toggle").on("click", () => {
+        $("#side-nav").toggleClass("hidden");
     });
-    document.getElementById("dropdown").addEventListener("click", () => {
-        document.getElementById("dropdown-content").classList.toggle("hidden");
+
+    $(".dropdown .dropdown-toggle").on("click", function () {
+        $(this).siblings(".dropdown-content").toggleClass("hidden");
     });
 });
-

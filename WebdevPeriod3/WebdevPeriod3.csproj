@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Compile Include="Areas\Identity\Models\LoginDto.cs" />
+    <Compile Include="Areas\Identity\Models\ProfileDto.cs" />
     <Compile Include="Areas\Identity\Models\RegistrationDto.cs" />
   </ItemGroup>
 
