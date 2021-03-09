@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace WebdevPeriod3.Utilities
 {
@@ -17,10 +14,8 @@ namespace WebdevPeriod3.Utilities
         /// <returns>The member name accessed in <paramref name="expression"/></returns>
         public static string ExtractMemberName<T, U>(this Expression<Func<T, U>> expression)
         {
-            if (expression.Body.NodeType != ExpressionType.MemberAccess)
+            if (!(expression.Body is MemberExpression body))
                 throw new ArgumentException("The provided expression has to be a member access expression.");
-
-            var body = expression.Body as MemberExpression;
 
             if (body.Expression.Type != typeof(T))
                 throw new ArgumentException($"The provided expression has to be performed on a {typeof(T).Name}.");

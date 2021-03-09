@@ -1,5 +1,4 @@
 ﻿@model WebdevPeriod3.Areas.Identity.Models.RegistrationDto
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Register";
 }
@@ -91,6 +90,8 @@
                         </span>
                     </button>
                 </div>
+
+                <input hidden asp-for="ReturnUrl" />
             </form>
         </div>
     </div>

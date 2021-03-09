@@ -10,7 +10,7 @@
 
         public ProductRelation() { }
 
-        public ProductRelation(string productId, string subProductId): this()
+        public ProductRelation(string productId, string subProductId) : this()
         {
             ProductId = productId;
             SubProductId = subProductId;
