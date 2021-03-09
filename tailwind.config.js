@@ -6,7 +6,8 @@ module.exports = {
       enabled: true,
       content: [
           './**/*.html',
-          './**/*.razor'
+          './**/*.razor',
+          './**/*.cshtml'
       ],
   },
   darkMode: false, // or 'media' or 'class'
