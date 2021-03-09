@@ -108,18 +108,13 @@ namespace WebdevPeriod3.Controllers
                 CreatedAt = DateTime.Now
             };
 
-            await _dapperProductStore.AddProductAsync(product);
-
-            foreach (string Subsystem in dto.SubSystems)
-            {
-                var productRelation = new ProductRelation()
+            await _dapperProductStore.AddProductAsync(
+                product,
+                dto.SubSystems.Select(subSystemId => new ProductRelation()
                 {
                     ProductId = product.Id,
-                    SubProductId = Subsystem
-                };
-
-                await _dapperProductStore.AddSubProductAsync(productRelation);
-            }
+                    SubProductId = subSystemId
+                }));
 
             return RedirectToAction("Index");
         }
