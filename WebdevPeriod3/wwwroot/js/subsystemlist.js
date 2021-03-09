@@ -79,7 +79,7 @@ function search(term) {
  * @param {SearchResult[]} results
  */
 function resultsToHTML(results) {
-    return results.map(result => `<li data-id="${result.id}" class="bg-gray-100 p-4 mt-1 cursor-pointer hover:bg-gray-200" data-name="${result.name}">${result.name}</li>`).join("\n");
+    return results.map(result => `<li data-id="${result.id}" class="bg-gray-100 p-3 mt-1 cursor-pointer rounded-sm hover:bg-gray-200" data-name="${result.name}">${result.name} - ${result.description}</li>`).join("\n");
 }
 
 function createSubSystemStore() {
@@ -125,7 +125,7 @@ function createSubSystemStore() {
  */
 function subSystemsToHTML(subSystems) {
     return subSystems.map((subSystem, index) => {
-        const removeButtonHTML = `<button type="button" class="bg-red-600 text-white mr-1 p-2 text-sm rounded-md hover:bg-red-700" data-action="remove">${subSystem.name}</button>`;
+        const removeButtonHTML = `<button type="button" class="bg-red-600 text-white mr-1 p-2 pl-4 pr-4 text-sm rounded-md hover:bg-red-700" data-action="remove">${subSystem.name}</button>`;
 
         return $(`<li class="list-none flex flex-row"><input name="SubSystems[${index}]" value="${subSystem.id}" hidden></li>`)
             .attr('data-id', subSystem.id)
