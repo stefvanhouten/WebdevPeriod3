@@ -68,30 +68,18 @@ namespace WebdevPeriod3.Controllers
             return View(viewModel);
         }
 
+        [Authorize]
         public IActionResult CreatePost()
         {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductDto dto)
         {
-            const string NOT_SIGNED_IN_ERROR = "Not logged in";
             const string NOT_AGREED_TO_TERMS = "Must agree to terms";
-            //const string NO_SUBSYSTEMS = "Must have at least 2 subsystems";
 
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                ModelState.AddModelError(string.Empty, NOT_SIGNED_IN_ERROR);
-                return View(nameof(CreatePost), dto);
-            }
-            /* if (dto.SubSystems.Count() < 2)
-            {
-                ModelState.AddModelError(string.Empty, NO_SUBSYSTEMS);
-                return View(nameof(CreatePost), dto);
-            } */
             if (dto.TermsGDPR == false)
             {
                 ModelState.AddModelError(string.Empty, NOT_AGREED_TO_TERMS);
@@ -103,7 +91,7 @@ namespace WebdevPeriod3.Controllers
                 Id = Guid.NewGuid().ToString("N"),
                 Name = dto.Name,
                 Description = dto.Description,
-                PosterId = user.Id,
+                PosterId = _userManager.GetUserId(User),
                 ShowInCatalog = true,
                 CreatedAt = DateTime.Now
             };
