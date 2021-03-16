@@ -18,7 +18,7 @@ namespace WebdevPeriod3.Areas.Identity.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Index() => View();
+        public IActionResult Index([FromQuery] string returnUrl) => View(new LoginDto(returnUrl));
 
         [HttpPost]
         public async Task<IActionResult> Login([FromForm] LoginDto dto)
@@ -52,7 +52,10 @@ namespace WebdevPeriod3.Areas.Identity.Controllers
                 return View(nameof(Index), dto);
             }
 
-            return RedirectToAction("Index", "Home", new { area = "" });
+            if (dto.ReturnUrl != null)
+                return Redirect(dto.ReturnUrl);
+            else
+                return RedirectToAction("Index", "Home", new { area = "" });
         }
 
     }

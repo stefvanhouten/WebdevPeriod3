@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebdevPeriod3.Areas.Identity.Entities;
-using WebdevPeriod3.Models;
+using WebdevPeriod3.Entities;
 
 namespace WebdevPeriod3.ViewModels
 {
-    public class AdminViewModel
+    public class ProfileViewModel
     {
-        public List<User> Users { get; set; }
-        public List<Comment> Comments { get; set; }
+        public User UserInformation { get; set; }
+        public IEnumerable<Product> OwnProducts { get; set; }
     }
 }

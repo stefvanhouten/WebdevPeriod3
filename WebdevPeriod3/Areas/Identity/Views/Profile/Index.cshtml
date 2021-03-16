@@ -1,5 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
+﻿@model WebdevPeriod3.Areas.Identity.Models.ProfileDto;
+@{
+    ViewData["Title"] = "Profile";
 }
 
 <div class="w-full my-5 p-5">
@@ -11,25 +12,7 @@
                          src="~/images/robot.png"
                          alt="">
                 </div>
-                <h1 class="text-gray-900 font-bold text-xl leading-8 my-1">Angy bot-1337</h1>
-                <h3 class="text-gray-600 font-lg text-semibold leading-6">Metally boi who liks to pew pew.</h3>
-                <p class="text-sm text-gray-500 hover:text-gray-600 leading-6">
-                    Lorem ipsum dolor sit amet
-                    consectetur adipisicing elit.
-                    Reprehenderit, eligendi dolorum sequi illum qui unde aspernatur non deserunt
-                </p>
-                <ul class="bg-gray-100 text-gray-600 hover:text-gray-700 hover:shadow py-2 px-3 mt-3 divide-y rounded shadow-sm">
-                    <li class="flex items-center py-3">
-                        <span>Status</span>
-                        <span class="ml-auto">
-                            <span class="bg-green-500 py-1 px-2 rounded text-white text-sm">Active</span>
-                        </span>
-                    </li>
-                    <li class="flex items-center py-3">
-                        <span>Member since</span>
-                        <span class="ml-auto">Nov 07, 2016</span>
-                    </li>
-                </ul>
+                <h1 class="text-gray-900 font-bold text-xl leading-8 my-1">@Model.UserInformation.UserName</h1>
             </div>
             @*<div class="bg-white p-3 border-t-2 border-gray-300">
                 </div>*@
@@ -49,17 +32,13 @@
                 <div class="text-gray-700">
                     <div class="grid md:grid-cols-2 text-sm">
                         <div class="grid grid-cols-2">
-                            <div class="px-4 py-2 font-semibold">First Name</div>
-                            <div class="px-4 py-2">Jane</div>
+                            <div class="px-4 py-2 font-semibold">User Name:</div>
+                            <div class="px-4 py-2">@Model.UserInformation.UserName</div>
                         </div>
                         <div class="grid grid-cols-2">
-                            <div class="px-4 py-2 font-semibold">Last Name</div>
-                            <div class="px-4 py-2">Doe</div>
-                        </div>
-                        <div class="grid grid-cols-2">
-                            <div class="px-4 py-2 font-semibold">Email.</div>
+                            <div class="px-4 py-2 font-semibold">Email:</div>
                             <div class="px-4 py-2">
-                                <p class="text-blue-800">jane@example.com</p>
+                                <p class="text-blue-800">@Model.UserInformation.Email</p>
                             </div>
                         </div>
                     </div>
@@ -80,10 +59,13 @@
                             <span class="tracking-wide">Posts</span>
                         </div>
                         <ul class="list-inside space-y-2">
-                            <li>
-                                <div class="text-teal-600">Robot0</div>
-                                <div class="text-gray-500 text-xs">02-02-2021</div>
-                            </li>
+                            @foreach (var product in Model.OwnProducts)
+                            {
+                                <li>
+                                    <div class="text-teal-600">@product.Name</div>
+                                    <div class="text-gray-500 text-xs">@product.CreatedAt.ToString("d-M-yyyy")</div>
+                                </li>
+                            }
                         </ul>
                     </div>
                 </div>
