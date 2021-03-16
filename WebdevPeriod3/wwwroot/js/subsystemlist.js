@@ -130,7 +130,6 @@ function subSystemsToHTML(subSystems) {
         return $(`<li class="list-none flex flex-row"><input name="SubSystems[${index}]" value="${subSystem.id}" hidden></li>`)
             .attr('data-id', subSystem.id)
             .attr('data-name', subSystem.name)
-            .append(content)
             .append(removeButtonHTML)
             .prop("outerHTML");
     });
