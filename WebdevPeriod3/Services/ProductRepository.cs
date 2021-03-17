@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using WebdevPeriod3.Areas.Identity.Entities;
@@ -64,5 +65,13 @@ namespace WebdevPeriod3.Services
                     $"LIKE '%{searchTerm}%';",
                     new { searchTerm })
                 );
+
+        public Task<IEnumerable<Product>> FindProductsWithIds(IEnumerable<string> ids) =>
+            WithConnection(
+                connection => connection.QueryAsync<Product>(
+                    $"{typeof(Product).ToSelectQuery()} " +
+                    $"WHERE {ID_SELECTOR.ToColumnName()} " +
+                    $"IN @{nameof(ids)};",
+                    new { ids = ids.ToArray() }));
     }
 }

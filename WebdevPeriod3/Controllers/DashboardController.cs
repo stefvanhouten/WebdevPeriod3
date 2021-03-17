@@ -71,7 +71,7 @@ namespace WebdevPeriod3.Controllers
         [Authorize]
         public IActionResult CreateProduct()
         {
-            return View();
+            return View(new ProductDto());
         }
 
         [Authorize]

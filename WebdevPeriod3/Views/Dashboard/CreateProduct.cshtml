@@ -1,5 +1,6 @@
 ﻿@model WebdevPeriod3.Models.ProductDto
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject WebdevPeriod3.Services.ProductRepository _productRepository;
 
 @{
     ViewData["Title"] = "Create product";
@@ -36,7 +37,7 @@
         </div>
         <span asp-validation-for="ShowInCatalog" class="text-red-500"></span>
         <div class="flex items-baseline space-x-2 mt-2">
-            <input asp-for="ShowInCatalog" type="checkbox" class="inline-block" checked>
+            <input asp-for="ShowInCatalog" type="checkbox" class="inline-block">
             <label asp-for="ShowInCatalog" class="text-gray-600 text-sm"></label>
         </div>
         <span asp-validation-for="TermsGDPR" class="text-red-500"></span>
@@ -52,6 +53,13 @@
 </div>
 
 @section Scripts {
+    <script>
+        const initialSubSystems = @(Json.Serialize(
+                                    from product in await _productRepository.FindProductsWithIds(Model.SubSystems)
+                                    select new { id = product.Id, name = product.Name }
+                                  ));
+
+    </script>
     <script src="~/lib/rxjs/rxjs.umd.min.js"></script>
     <script src="~/js/subsystemlist.js"></script>
 }

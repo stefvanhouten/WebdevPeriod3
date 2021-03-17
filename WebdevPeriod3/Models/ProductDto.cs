@@ -11,7 +11,7 @@ namespace WebdevPeriod3.Models
 		public string Description { get; set; }
 		[Required]
 		[Display(Name = "In catalogus tonen.")]
-		public bool ShowInCatalog { get; set; }
+		public bool ShowInCatalog { get; set; } = true;
 		[Required]
 		public bool TermsGDPR { get; set; }
 	}
