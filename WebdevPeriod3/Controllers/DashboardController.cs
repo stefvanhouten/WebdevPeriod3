@@ -92,7 +92,7 @@ namespace WebdevPeriod3.Controllers
                 Name = dto.Name,
                 Description = dto.Description,
                 PosterId = _userManager.GetUserId(User),
-                ShowInCatalog = true,
+                ShowInCatalog = dto.ShowInCatalog,
                 CreatedAt = DateTime.Now
             };
 
