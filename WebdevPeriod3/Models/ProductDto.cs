@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebdevPeriod3.Models
 {
-	public class ProductDto
+    public class ProductDto
 	{
 		[Required(AllowEmptyStrings = false)]
 		public string Name { get; set; }
