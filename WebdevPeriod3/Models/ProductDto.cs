@@ -10,6 +10,7 @@ namespace WebdevPeriod3.Models
 		public List<string> SubSystems { get; set; } = new List<string>();
 		public string Description { get; set; }
 		[Required]
+		[Display(Name = "In catalogus tonen.")]
 		public bool ShowInCatalog { get; set; }
 		[Required]
 		public bool TermsGDPR { get; set; }
