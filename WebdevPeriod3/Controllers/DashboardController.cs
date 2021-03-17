@@ -69,7 +69,7 @@ namespace WebdevPeriod3.Controllers
         }
 
         [Authorize]
-        public IActionResult CreatePost()
+        public IActionResult CreateProduct()
         {
             return View();
         }
@@ -83,7 +83,7 @@ namespace WebdevPeriod3.Controllers
             if (dto.TermsGDPR == false)
             {
                 ModelState.AddModelError(string.Empty, NOT_AGREED_TO_TERMS);
-                return View(nameof(CreatePost), dto);
+                return View(nameof(CreateProduct), dto);
             }
 
             var product = new Product()

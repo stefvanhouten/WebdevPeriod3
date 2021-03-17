@@ -2,11 +2,11 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    ViewData["Title"] = "Create post";
+    ViewData["Title"] = "Create product";
 }
 
 <div class="flex flex-col w-full p-5">
-    <form method="post" action="CreateProduct" class="form bg-white p-6 my-10 relative">
+    <form method="post" asp-action="CreateProduct" class="form bg-white p-6 my-10 relative">
         @Html.ValidationSummary(true, null, new { @class = "text-red-500" })
         <h3 class="text-xl text-gray-900 font-semibold">Create new post</h3>
         <span asp-validation-for="Name" class="text-red-500"></span>
