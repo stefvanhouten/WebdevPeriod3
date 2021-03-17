@@ -31,7 +31,7 @@ namespace WebdevPeriod3.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var leProducts = await _productRepository.GetAllProducts();
+            var leProducts = await _productRepository.GetAllProductsInCatalog();
 
             List<Product> productPosts = leProducts.ToList();
 

@@ -41,6 +41,15 @@ namespace WebdevPeriod3.Services
         public Task<IEnumerable<Product>> GetAllProducts() =>
             WithConnection(connection => connection.QueryAsync<Product>(SqlHelper.CreateSelectQuery("products")));
 
+        public Task<IEnumerable<Product>> GetAllProductsInCatalog()
+        {
+            var parameters = new { ShowInCatalog = true };
+
+            return WithConnection(connection => connection.QueryAsync<Product>(
+                SqlHelper.CreateSelectWhereQuery((Product product) => product.ShowInCatalog, nameof(parameters.ShowInCatalog)),
+                parameters));
+        }
+
         public Task<IEnumerable<Product>> FindProductsByPosterId(string posterId) =>
             WithConnection(
                connection => connection.QueryAsync<Product>(
