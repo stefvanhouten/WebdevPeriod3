@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebdevPeriod3.Models
@@ -9,6 +10,8 @@ namespace WebdevPeriod3.Models
 		public string Name { get; set; }
 		public List<string> SubSystems { get; set; } = new List<string>();
 		public string Description { get; set; }
+		[Required]
+		public IFormFile Image { get; set; }
 		[Required]
 		[Display(Name = "In catalogus tonen.")]
 		public bool ShowInCatalog { get; set; } = true;
