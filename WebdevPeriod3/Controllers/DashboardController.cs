@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebdevPeriod3.Areas.Identity.Entities;
 using WebdevPeriod3.Models;
-using WebdevPeriod3.Utilities;
 using WebdevPeriod3.ViewModels;
 using WebdevPeriod3.Services;
 using WebdevPeriod3.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace WebdevPeriod3.Controllers
 {
@@ -31,7 +31,7 @@ namespace WebdevPeriod3.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var leProducts = await _productRepository.GetAllProducts();
+            var leProducts = await _productRepository.GetAllProductsInCatalog();
 
             List<Product> productPosts = leProducts.ToList();
 
@@ -44,34 +44,33 @@ namespace WebdevPeriod3.Controllers
             return View(viewModel);
         }
 
-        public IActionResult ViewPost(int id)
+        public async Task<IActionResult> ViewPost(string id)
         {
-            //TODO: Split into seperate controller?
-            List<BlogImage> images = new List<BlogImage>();
-            for (int i = 0; i < 4; i++)
-            {
-                BlogImage image = new BlogImage()
-                {
-                    ID = i,
-                    Title = "Image name",
-                    WebshopUrl = new List<string>() { "www.kaasislekker.nl" },
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-                    ImagePath = "~/images/another-robot.png"
-                };
-                images.Add(image);
-            }
+            var result = await _productRepository.FindProductById(id);
 
-            PostViewModel viewModel = new PostViewModel()
-            {
-                Images = images
-            };
-            return View(viewModel);
+            if (result == null)
+                return NotFound();
+
+            var product = result?.product;
+            var subProducts = result?.subProducts;
+
+            return View(new PostViewModel(product, subProducts));
+        }
+
+        public async Task<IActionResult> Image(string id)
+        {
+            var image = await _productRepository.FindImageByProductId(id);
+
+            if (image == null)
+                return NotFound();
+
+            return File(image, "image/png");
         }
 
         [Authorize]
-        public IActionResult CreatePost()
+        public IActionResult CreateProduct()
         {
-            return View();
+            return View(new ProductDto());
         }
 
         [Authorize]
@@ -83,7 +82,7 @@ namespace WebdevPeriod3.Controllers
             if (dto.TermsGDPR == false)
             {
                 ModelState.AddModelError(string.Empty, NOT_AGREED_TO_TERMS);
-                return View(nameof(CreatePost), dto);
+                return View(nameof(CreateProduct), dto);
             }
 
             var product = new Product()
@@ -92,8 +91,9 @@ namespace WebdevPeriod3.Controllers
                 Name = dto.Name,
                 Description = dto.Description,
                 PosterId = _userManager.GetUserId(User),
-                ShowInCatalog = true,
-                CreatedAt = DateTime.Now
+                ShowInCatalog = dto.ShowInCatalog,
+                CreatedAt = DateTime.Now,
+                Image = await ConvertToByteArray(dto.Image)
             };
 
             await _dapperProductStore.AddProductAsync(
@@ -105,6 +105,16 @@ namespace WebdevPeriod3.Controllers
                 }));
 
             return RedirectToAction("Index");
+
+            static async Task<byte[]> ConvertToByteArray(IFormFile file)
+            {
+                using var fileStream = file.OpenReadStream();
+                using var memoryStream = new System.IO.MemoryStream();
+
+                await fileStream.CopyToAsync(memoryStream);
+
+                return memoryStream.ToArray();
+            }
         }
     }
 }
