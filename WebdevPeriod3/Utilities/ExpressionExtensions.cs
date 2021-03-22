@@ -182,9 +182,10 @@ namespace WebdevPeriod3.Utilities
             this Expression<Func<EL, K>> leftExpression,
             Expression<Func<ER, K>> rightExpression,
             string leftTableName = null,
-            string rightTableName = null) =>
-            $"JOIN {rightTableName ?? typeof(ER).ToTableName()} " +
+            string rightTableName = null,
+            string rightTableAlias = null) =>
+            $"JOIN {rightTableName ?? typeof(ER).ToTableName()}{(rightTableAlias != null ? $" {rightTableAlias}" : "")} " +
             $"ON {leftTableName ?? typeof(EL).ToTableName()}.{leftExpression.ExtractMemberName()} " +
-            $"= {rightTableName ?? typeof(ER).ToTableName()}.{rightExpression.ExtractMemberName()}";
+            $"= {rightTableAlias ?? rightTableName ?? typeof(ER).ToTableName()}.{rightExpression.ExtractMemberName()}";
     }
 }

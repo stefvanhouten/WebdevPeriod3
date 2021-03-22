@@ -1,12 +1,13 @@
 ﻿@model WebdevPeriod3.Models.ProductDto
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject WebdevPeriod3.Services.ProductRepository _productRepository;
 
 @{
-    ViewData["Title"] = "Create post";
+    ViewData["Title"] = "Create product";
 }
 
 <div class="flex flex-col w-full p-5">
-    <form method="post" action="CreateProduct" class="form bg-white p-6 my-10 relative">
+    <form method="post" asp-action="CreateProduct" class="form bg-white p-6 my-10 relative" enctype="multipart/form-data">
         @Html.ValidationSummary(true, null, new { @class = "text-red-500" })
         <h3 class="text-xl text-gray-900 font-semibold">Create new post</h3>
         <span asp-validation-for="Name" class="text-red-500"></span>
@@ -24,8 +25,9 @@
             </div>
         </div>
         <textarea asp-for="Description" cols="10" rows="10" placeholder="Content" class="border p-2 mt-3 w-full"></textarea>
+        <span asp-validation-for="Image" class="text-red-500"></span>
         <div class="border border-dashed border-gray-500 relative mt-3">
-            <input type="file" multiple class="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50">
+            <input asp-for="Image" class="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50">
             <div class="text-center p-10 absolute top-0 right-0 left-0 m-auto">
                 <h4>
                     Drop files anywhere to upload
@@ -34,11 +36,16 @@
                 <p class="">Select Files</p>
             </div>
         </div>
+        <span asp-validation-for="ShowInCatalog" class="text-red-500"></span>
+        <div class="flex items-baseline space-x-2 mt-2">
+            <input asp-for="ShowInCatalog" type="checkbox" class="inline-block">
+            <label asp-for="ShowInCatalog" class="text-gray-600 text-sm"></label>
+        </div>
         <span asp-validation-for="TermsGDPR" class="text-red-500"></span>
         <p class="font-bold text-sm mt-3">GDPR Agreement *</p>
         <div class="flex items-baseline space-x-2 mt-2">
             <input asp-for="TermsGDPR" type="checkbox" class="inline-block">
-            <p class="text-gray-600 text-sm">I consent.</p>
+            <label asp-for="TermsGDPR" class="text-gray-600 text-sm">I consent.</label>
         </div>
         <input type="submit" value="Submit" class="w-full mt-6 bg-blue-600 hover:bg-blue-500 text-white font-semibold p-3">
 
@@ -47,6 +54,13 @@
 </div>
 
 @section Scripts {
+    <script>
+        const initialSubSystems = @(Json.Serialize(
+                                    from product in await _productRepository.FindProductsWithIds(Model.SubSystems)
+                                    select new { id = product.Id, name = product.Name }
+                                  ));
+
+    </script>
     <script src="~/lib/rxjs/rxjs.umd.min.js"></script>
     <script src="~/js/subsystemlist.js"></script>
 }

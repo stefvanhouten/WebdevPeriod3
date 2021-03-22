@@ -11,6 +11,7 @@ namespace WebdevPeriod3.Entities
         public string Description { get; set; }
         public string PosterId { get; set; }
         public bool ShowInCatalog { get; set; }
+        public byte[] Image { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

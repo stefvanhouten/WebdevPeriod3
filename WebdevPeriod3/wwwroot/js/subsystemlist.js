@@ -1,5 +1,5 @@
 ﻿$(() => {
-    const subSystemStore = createSubSystemStore();
+    const subSystemStore = createSubSystemStore(initialSubSystems);
 
     let subSystemIds = new Set();
 
@@ -82,7 +82,8 @@ function resultsToHTML(results) {
     return results.map(result => `<li data-id="${result.id}" class="bg-gray-100 p-3 mt-1 cursor-pointer rounded-sm hover:bg-gray-200" data-name="${result.name}">${result.name} - ${result.description}</li>`).join("\n");
 }
 
-function createSubSystemStore() {
+function createSubSystemStore(initialSubSystems) {
+    console.log(initialSubSystems);
     const operations$ = new rxjs.BehaviorSubject(null);
 
     return {
@@ -107,7 +108,7 @@ function createSubSystemStore() {
                     default:
                         return subSystems;
                 }
-            }, [])
+            }, initialSubSystems)
         ),
         add({ id, name }) {
             operations$.next({ type: "add", id, name })
