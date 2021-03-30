@@ -12,7 +12,7 @@ using WebdevPeriod3.ViewModels;
 
 namespace WebdevPeriod3.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly UserRepository _userRepository;
