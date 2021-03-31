@@ -29,7 +29,7 @@ namespace WebdevPeriod3.Services
             if (comment.Id == null)
                 comment.Id = Guid.NewGuid().ToString("N");
 
-            AddOperation((connection, transaction) => connection.ExecuteAsync(comment.ToInsertQuery(), comment));
+            AddOperation((connection, transaction) => connection.ExecuteAsync(comment.ToInsertQuery(), comment, transaction));
         }
 
         public Task<IEnumerable<Comment>> GetTopLevelComments(string productId) =>
@@ -58,5 +58,12 @@ namespace WebdevPeriod3.Services
                 $" {PRODUCT_ID_SELECTOR.ToWhereClause(nameof(productId))}" +
                 $" AND {FLAGGED_SELECTOR.ToColumnName()} IS FALSE;",
                 new { productId }));
+
+        public void FlagComment(string commentId) =>
+            AddOperation((connection, transaction) => connection.ExecuteAsync(
+                $"UPDATE {typeof(Comment).ToTableName()}" +
+                $" SET {FLAGGED_SELECTOR.ToColumnName()} = 1" +
+                $" {ID_SELECTOR.ToWhereClause(nameof(commentId))};",
+                new { commentId }));
     }
 }

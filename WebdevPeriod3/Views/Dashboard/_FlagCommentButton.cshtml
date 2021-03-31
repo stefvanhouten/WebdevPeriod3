@@ -1,0 +1,6 @@
+﻿@model WebdevPeriod3.Models.FlagCommentDto
+
+<button type="submit" class="text-red-500 text-xs mr-2 bg-red-200 p-1 rounded-md" form="flag-@Model.Id">Report</button>
+<form hidden method="post" asp-action="FlagComment" asp-route-id="@ViewContext.RouteData.Values["id"]" id="flag-@Model.Id">
+    <input tabindex="-1" asp-for="Id" value="@Model.Id">
+</form>

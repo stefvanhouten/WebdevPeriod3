@@ -9,7 +9,7 @@
     </div>
     <div class="flex flex-row">
         <button class="text-blue-500 text-xs mr-2 bg-blue-200 p-1 rounded-md reply-button">Reply</button>
-        <button class="text-red-500 text-xs mr-2 bg-red-200 p-1 rounded-md">Report</button>
+        <partial name="_FlagCommentButton" model="new WebdevPeriod3.Models.FlagCommentDto(Model)" />
     </div>
     <div class="m-2">
         <partial name="_CommentForm" model="new WebdevPeriod3.Models.CommentDto(Model)" />

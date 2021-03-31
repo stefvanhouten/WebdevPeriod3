@@ -30,5 +30,11 @@ namespace WebdevPeriod3.Services
         });
 
         public Task<IEnumerable<Models.HydratedComment>> GetComments(string productId) => _commentRepository.GetComments(productId);
+
+        public Task FlagComment(string commentId)
+        {
+            _commentRepository.FlagComment(commentId);
+            return _dapperTransactionService.RunOperations();
+        }
     }
 }

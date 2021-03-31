@@ -140,11 +140,20 @@ namespace WebdevPeriod3.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddComment(string id, CommentDto commentDto)
+        public async Task<IActionResult> AddComment(string id, [FromForm] CommentDto commentDto)
         {
             var posterId = _userManager.GetUserId(User);
 
             await _dapperCommentStore.AddComment(commentDto.Content, id, commentDto.ParentId, posterId);
+
+            return RedirectToAction(nameof(ViewPost), new { id });
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> FlagComment([FromRoute]string id, [FromForm] FlagCommentDto flagCommentDto)
+        {
+            await _dapperCommentStore.FlagComment(flagCommentDto.Id);
 
             return RedirectToAction(nameof(ViewPost), new { id });
         }
