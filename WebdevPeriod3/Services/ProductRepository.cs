@@ -19,6 +19,15 @@ namespace WebdevPeriod3.Services
         private static readonly Expression<Func<Product, byte[]>> IMAGE_SELECTOR = product => product.Image;
         private static readonly Expression<Func<ProductRelation, string>> PRODUCT_RELATION_SUB_PRODUCT_ID_SELECTOR = relation => relation.SubProductId;
         private static readonly Expression<Func<ProductRelation, string>> PRODUCT_RELATION_PRODUCT_ID_SELECTOR = relation => relation.ProductId;
+        private static readonly Expression<Func<Comment, string>> COMMENT_ID_SELECTOR = comment => comment.Id;
+        private static readonly Expression<Func<Comment, string>> COMMENT_PRODUCT_ID_SELECTOR = comment => comment.ProductId;
+        private static readonly Expression<Func<Comment, string>> COMMENT_PARENT_ID_SELECTOR = comment => comment.ParentId;
+        private static readonly Expression<Func<Comment, string>> COMMENT_CONTENT_SELECTOR = comment => comment.Content;
+        private static readonly Expression<Func<Comment, bool>> COMMENT_FLAGGED_SELECTOR = comment => comment.Flagged;
+        private static readonly Expression<Func<Comment, string>> COMMENT_POSTER_ID_SELECTOR = comment => comment.PosterId;
+        private static readonly Expression<Func<User, string>> USER_ID_SELECTOR = user => user.Id;
+        private static readonly Expression<Func<User, string>> USER_NAME_SELECTOR = user => user.UserName;
+
         public ProductRepository(DapperTransactionService dapperTransactionService, IConfiguration configuration) : base(dapperTransactionService, configuration)
         {
         }
@@ -77,20 +86,29 @@ namespace WebdevPeriod3.Services
                     $"IN @{nameof(ids)};",
                     new { ids = ids.ToArray() }));
 
-        public Task<(Product product, IEnumerable<Product> subProducts)?> FindProductById(string id) =>
-            WithConnection<SqlMapper.GridReader, (Product product, IEnumerable<Product> subProducts)?>(
+        public Task<(Product product, IEnumerable<Product> subProducts, IEnumerable<Models.HydratedComment> comments)?> FindProductById(string id) =>
+            WithConnection<SqlMapper.GridReader, (Product product, IEnumerable<Product> subProducts, IEnumerable<Models.HydratedComment> comments)?>(
                 connection => connection.QueryMultipleAsync(
                     $"{typeof(Product).ToSelectQuery()} " +
                     $"{ID_SELECTOR.ToWhereClause(nameof(id))};" +
                     $"{SqlHelper.CreateSelectQuery(typeof(ProductRelation).ToTableName(), "subProducts.*")} " +
                     $"{PRODUCT_RELATION_SUB_PRODUCT_ID_SELECTOR.ToJoinClause(ID_SELECTOR, rightTableAlias: "subProducts")} " +
-                    $"{PRODUCT_RELATION_PRODUCT_ID_SELECTOR.ToWhereClause(nameof(id))};",
+                    $"{PRODUCT_RELATION_PRODUCT_ID_SELECTOR.ToWhereClause(nameof(id))};" +
+                    $"SELECT" +
+                    $" {COMMENT_ID_SELECTOR.ToColumnName()}," +
+                    $" {COMMENT_PARENT_ID_SELECTOR.ToColumnName()}," +
+                    $" {COMMENT_CONTENT_SELECTOR.ToColumnName()}," +
+                    $" {USER_NAME_SELECTOR.ToColumnName()} AS {nameof(Models.HydratedComment.PosterName)}" +
+                    $" FROM {typeof(Comment).ToTableName()}" +
+                    $" INNER {COMMENT_POSTER_ID_SELECTOR.ToJoinClause(USER_ID_SELECTOR)}" +
+                    $" {COMMENT_PRODUCT_ID_SELECTOR.ToWhereClause(nameof(id))}" +
+                    $" AND {COMMENT_FLAGGED_SELECTOR.ToColumnName()} IS FALSE;",
                     new { id }),
                 async result =>
                 {
                     try
                     {
-                        return new(await result.ReadSingleAsync<Product>(), await result.ReadAsync<Product>());
+                        return new(await result.ReadSingleAsync<Product>(), await result.ReadAsync<Product>(), await result.ReadAsync<Models.HydratedComment>());
                     }
                     catch (InvalidOperationException)
                     {

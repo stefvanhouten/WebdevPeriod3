@@ -21,6 +21,11 @@
 </div>
 <div class="flex flex-col bg-gray-200 p-5">
     <div class="mb-2 border-b-2 border-gray-100">
+        <partial name="_CommentForm" model="new WebdevPeriod3.Models.CommentDto()" />
+        @foreach (var comment in Model.Comments)
+        {
+            <partial name="_Comment" model="comment" />
+        }
         <div class="inline-block text-gray-400">
             <p class="inline-block text-sm">John doe</p>
             <span class="ml-1 text-xs">02-02-2021</span>
@@ -78,3 +83,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/comments.js"></script>
+}

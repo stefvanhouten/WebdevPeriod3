@@ -1,0 +1,13 @@
+﻿@model WebdevPeriod3.Models.CommentDto
+
+<form asp-action="AddComment"
+      asp-route-id="@ViewContext.RouteData.Values["id"]"
+      method="post"
+      class="@(Model.ParentId == null ? "top-level" : "hidden") comment-form">
+    <textarea asp-for="Content" cols="10" rows="10" placeholder="Content" class="border p-2 mt-3 w-full comment-input"></textarea>
+    @if (Model.ParentId != null)
+    {
+        <input hidden asp-for="ParentId">
+    }
+    <input type="submit" value="Reageren" class="w-full mt-6 bg-blue-600 hover:bg-blue-500 text-white font-semibold p-3">
+</form>
