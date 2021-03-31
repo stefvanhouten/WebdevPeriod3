@@ -4,7 +4,7 @@
       asp-route-id="@ViewContext.RouteData.Values["id"]"
       method="post"
       class="@(Model.ParentId == null ? "top-level" : "hidden") comment-form">
-    <textarea asp-for="Content" cols="10" rows="10" placeholder="Content" class="border p-2 mt-3 w-full comment-input"></textarea>
+    <textarea asp-for="Content" cols="10" rows="10" placeholder="Reactie" class="border p-2 mt-3 w-full comment-input"></textarea>
     @if (Model.ParentId != null)
     {
         <input hidden asp-for="ParentId">
