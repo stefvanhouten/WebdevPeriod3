@@ -16,12 +16,10 @@ namespace WebdevPeriod3.Controllers
 {
     public class DashboardController : Controller
     {
-
         private readonly UserManager<User> _userManager;
         private readonly ProductRepository _productRepository;
         private readonly DapperProductStore _dapperProductStore;
         private readonly DapperCommentStore _dapperCommentStore;
-
 
         public DashboardController(UserManager<User> userManager, ProductRepository productRepository, DapperProductStore dapperProductStore, DapperCommentStore dapperCommentStore)
         {
@@ -35,10 +33,9 @@ namespace WebdevPeriod3.Controllers
         {
             var leProducts = await _productRepository.GetAllProductsInCatalog();
 
-            List<Product> productPosts = leProducts.ToList();
+            var productPosts = leProducts.ToList();
 
-
-            DashboardViewModel viewModel = new DashboardViewModel()
+            var viewModel = new DashboardViewModel()
             {
                 ProductPosts = productPosts
             };
@@ -65,7 +62,7 @@ namespace WebdevPeriod3.Controllers
                 .ToDictionary(group => group.Key, group => group.AsEnumerable());
 
             CommentViewModel CreateCommentViewModel(HydratedComment commentData) =>
-                new CommentViewModel(
+                new(
                     commentData.Id,
                     commentData.PosterName,
                     commentData.Content,
@@ -88,13 +85,13 @@ namespace WebdevPeriod3.Controllers
             return File(image, "image/png");
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateProduct()
         {
             return View(new ProductDto());
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductDto dto)
         {
@@ -151,7 +148,7 @@ namespace WebdevPeriod3.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> FlagComment([FromRoute]string id, [FromForm] FlagCommentDto flagCommentDto)
+        public async Task<IActionResult> FlagComment([FromRoute] string id, [FromForm] FlagCommentDto flagCommentDto)
         {
             await _dapperCommentStore.FlagComment(flagCommentDto.Id);
 
