@@ -17,6 +17,7 @@ namespace WebdevPeriod3.Services
         private static readonly Expression<Func<Product, string>> ID_SELECTOR = product => product.Id;
         private static readonly Expression<Func<Product, string>> NAME_SELECTOR = product => product.Name;
         private static readonly Expression<Func<Product, byte[]>> IMAGE_SELECTOR = product => product.Image;
+        private static readonly Expression<Func<Product, bool>> SHOW_IN_CATALOG_SELECTOR = product => product.ShowInCatalog;
         private static readonly Expression<Func<ProductRelation, string>> PRODUCT_RELATION_SUB_PRODUCT_ID_SELECTOR = relation => relation.SubProductId;
         private static readonly Expression<Func<ProductRelation, string>> PRODUCT_RELATION_PRODUCT_ID_SELECTOR = relation => relation.ProductId;
         private static readonly Expression<Func<Comment, string>> COMMENT_ID_SELECTOR = comment => comment.Id;
@@ -59,7 +60,7 @@ namespace WebdevPeriod3.Services
             var parameters = new { ShowInCatalog = true };
 
             return WithConnection(connection => connection.QueryAsync<Product>(
-                SqlHelper.CreateSelectWhereQuery((Product product) => product.ShowInCatalog, nameof(parameters.ShowInCatalog)),
+                SqlHelper.CreateSelectWhereQuery(SHOW_IN_CATALOG_SELECTOR, nameof(parameters.ShowInCatalog)),
                 parameters));
         }
 
@@ -75,6 +76,16 @@ namespace WebdevPeriod3.Services
                     $"{typeof(Product).ToSelectQuery()} " +
                     $"WHERE {NAME_SELECTOR.ToColumnName() } " +
                     $"LIKE '%{searchTerm}%';",
+                    new { searchTerm })
+                );
+
+        public Task<IEnumerable<Product>> FindProductsInCatalogBySearchTerm(string searchTerm) =>
+            WithConnection(
+                connection => connection.QueryAsync<Product>(
+                    $"{typeof(Product).ToSelectQuery()} " +
+                    $"WHERE {NAME_SELECTOR.ToColumnName() } " +
+                    $"LIKE '%{searchTerm}%' " +
+                    $"AND {SHOW_IN_CATALOG_SELECTOR.ToColumnName()} IS TRUE;",
                     new { searchTerm })
                 );
 

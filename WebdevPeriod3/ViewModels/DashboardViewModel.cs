@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebdevPeriod3.Models;
+﻿using System.Collections.Generic;
 using WebdevPeriod3.Entities;
 
 namespace WebdevPeriod3.ViewModels
 {
     public class DashboardViewModel
     {
+        public string SearchTerm { get; set; }
         public List<Product> ProductPosts { get; set; }
     }
 }
