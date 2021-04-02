@@ -24,9 +24,9 @@ namespace WebdevPeriod3.Areas.Identity.Controllers
         public async Task<IActionResult> Index()
         {
             // RETRIEVE USER INFORMATION
-            User user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
 
-            ProfileDto profileDto = new ProfileDto()
+            var profileDto = new ProfileDto()
             {
                 UserInformation = user,
                 OwnProducts = await _productRepository.FindProductsByPosterId(user.Id)
