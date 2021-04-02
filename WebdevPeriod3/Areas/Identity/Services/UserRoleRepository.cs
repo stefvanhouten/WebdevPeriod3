@@ -104,11 +104,11 @@ namespace WebdevPeriod3.Areas.Identity.Services
         public void RemoveUserFromRoleByUserId(string userId, string roleName) =>
             AddOperation((connection, transaction) => connection.ExecuteAsync(
                 // Delete a user role
-                $"DELETE FROM {typeof(UserRole).ToTableName()} " +
+                $"DELETE {typeof(UserRole).ToTableName()} FROM {typeof(UserRole).ToTableName()} " +
                 // Join roles to user roles by role ID...
                 $"INNER {ROLE_ID_SELECTOR.ToJoinClause(RIGHT_ROLE_ID_SELECTOR)} " +
                 // ...whereever the role name matches the provided role name...
-                $"AND {RIGHT_ROLE_NAME_SELECTOR.ToKeyValuePair(nameof(roleName))} " +
+                $"WHERE {RIGHT_ROLE_NAME_SELECTOR.ToKeyValuePair(nameof(roleName))} " +
                 // ...and the user ID matches the provided user ID
                 $"AND {USER_ID_SELECTOR.ToKeyValuePair(nameof(userId))};",
                 new { userId, roleName }, transaction));
