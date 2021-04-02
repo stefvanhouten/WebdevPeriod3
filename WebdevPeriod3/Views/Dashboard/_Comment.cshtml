@@ -1,0 +1,21 @@
+﻿@model WebdevPeriod3.ViewModels.CommentViewModel
+
+<div class="mb-2 border-l-2 pl-1 border-gray-100 comment">
+    <div class="inline-block text-gray-400">
+        <p class="inline-block text-sm">@Model.PosterName</p>
+    </div>
+    <div class="flex flex-col text-gray-700">
+        <p>@Model.Content</p>
+    </div>
+    <div class="flex flex-row">
+        <button class="text-blue-500 text-xs mr-2 bg-blue-200 p-1 rounded-md reply-button">Reply</button>
+        <partial name="_FlagCommentButton" model="new WebdevPeriod3.Models.FlagCommentDto(Model)" />
+    </div>
+    <div class="m-2">
+        <partial name="_CommentForm" model="new WebdevPeriod3.Models.CommentDto(Model)" />
+        @foreach (var reply in Model.Replies)
+        {
+            <partial name="_Comment" model="reply" />
+        }
+    </div>
+</div>
