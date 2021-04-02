@@ -29,9 +29,11 @@ namespace WebdevPeriod3.Controllers
             _dapperCommentStore = dapperCommentStore;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm)
         {
-            var leProducts = await _productRepository.GetAllProductsInCatalog();
+            var leProducts = await (string.IsNullOrEmpty(searchTerm)
+                ? _productRepository.GetAllProductsInCatalog()
+                : _productRepository.FindProductsInCatalogBySearchTerm(searchTerm));
 
             var productPosts = leProducts.ToList();
 
