@@ -88,13 +88,13 @@ namespace WebdevPeriod3.Controllers
             return File(image, "image/png");
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateProduct()
         {
             return View(new ProductDto());
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductDto dto)
         {
