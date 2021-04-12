@@ -4,11 +4,20 @@
 }
 
 <div class="flex flex-col w-full p-5">
-    <div class="flex w-full flex-row h-14">
-        <input type="text" class="p-7 w-4/6 rounded focus:shadow focus:outline-none mr-1" placeholder="Search for post">
-        <button class="bg-yellow-700 w-1/6 2xl:w-1/4 text-sm md:text-md text-white h-full m-auto p-4 transition duration-300 ease-in-out hover:bg-yellow-600 mr-1">Search</button>
-        <a asp-area="" asp-controller="Dashboard" asp-action="CreateProduct" class="bg-green-800 w-1/6 2xl:w-1/4 text-sm md:text-md text-center text-white h-full m-auto p-4 transition duration-300 ease-in-out hover:bg-green-700"><span>Create</span></a>
-    </div>
+    <form asp-action="Index" method="get" class="flex w-full flex-row h-14">
+        <input type="text"
+               class="p-7 w-4/6 rounded focus:shadow focus:outline-none mr-1"
+               placeholder="Search for post"
+               asp-for="SearchTerm">
+        <button type="submit"
+                class="bg-yellow-700 w-1/6 2xl:w-1/4 text-sm md:text-md text-white h-full m-auto p-4 transition duration-300 ease-in-out hover:bg-yellow-600 mr-1">
+            Search
+        </button>
+        <a asp-area="" asp-controller="Dashboard" asp-action="CreateProduct"
+           class="bg-green-800 w-1/6 2xl:w-1/4 text-sm md:text-md text-center text-white h-full m-auto p-4 transition duration-300 ease-in-out hover:bg-green-700">
+            <span>Create</span>
+        </a>
+    </form>
     <div class="grid grid-cols-1 gap-5 mt-6 sm:grid-cols-2 lg:grid-cols-2">
         @foreach (var post in Model.ProductPosts)
         {

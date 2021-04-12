@@ -32,9 +32,11 @@ namespace WebdevPeriod3
             services.AddScoped<UserRepository>();
             services.AddScoped<RoleRepository>();
             services.AddScoped<UserRoleRepository>();
+            services.AddScoped<CommentRepository>();
 
             services.AddScoped<ProductRepository>();
             services.AddScoped<DapperProductStore>();
+            services.AddScoped<DapperCommentStore>();
 
             services.AddScoped<IUserStore<User>, DapperUserStore>();
             services.AddScoped<IRoleStore<Role>, DapperRoleStore>();

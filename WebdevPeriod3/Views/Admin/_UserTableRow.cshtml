@@ -1,17 +1,17 @@
-﻿@model WebdevPeriod3.Areas.Identity.Entities.User
+﻿@model WebdevPeriod3.Models.UserTableRowModel
 
 <tr class="transition-all bg-gray-200 hover:bg-gray-300 hover:shadow-lg">
     <td class="p-4 w-1/3 break-all">
         <div class="ml-1">
             <div class="text-sm">
                 <a class="text-blue-500 font-italic text-center break-all">
-                    @Model.Email
+                    @Model.User.UserName
                 </a>
             </div>
         </div>
     </td>
     <td class="w-2/4 break-all">
-        <div class="text-sm text-gray-500">[PLACEHOLDER]</div>
+        <input type="checkbox" @(Model.DisableCheckbox ? "disabled" : "" ) @(Model.IsAdmin ? "checked" : "" ) data-user-id="@Model.User.Id" class="admin-checkbox">
     </td>
     <td class="w-1/6 break-all">
         <button class="uppercase flex items-center border border-red-600 p-2 text-red-600 max-w-max shadow-sm hover:shadow-lg rounded-full focus:outline-none">

@@ -1,13 +1,21 @@
-﻿@model WebdevPeriod3.ViewModels.AdminViewModel
+﻿@using Microsoft.AspNetCore.Identity;
+@using System.Linq;
+@using WebdevPeriod3.Models
+@model WebdevPeriod3.ViewModels.AdminViewModel
+@inject UserManager<WebdevPeriod3.Areas.Identity.Entities.User> _userManager
 @{
     ViewData["Title"] = "Users";
+
+    var adminIds = new HashSet<string>(from user in await _userManager.GetUsersInRoleAsync("Admin")
+                                       select user.Id);
+    var userId = _userManager.GetUserId(User);
 }
 
 <div class="p-5">
     <table class="table table-fixed w-full text-left divide-y divide-gray-300">
         <thead class="bg-yellow-800 shadow-lg">
             <tr>
-                <th scope="col" class="w-1/3 p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">E-mail</th>
+                <th scope="col" class="w-1/3 p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">Gebruikersnaam</th>
                 <th scope="col" class="w-2/4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">Group</th>
                 <th scope="col" class="w-1/6 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">Action</th>
             </tr>
@@ -15,8 +23,13 @@
         <tbody class="bg-white divide-y divide-gray-200">
             @foreach (var user in Model.Users)
             {
-                <partial name="_UserTableRow" model="user" />
+                <partial name="_UserTableRow"
+                         model="new UserTableRowModel(user, adminIds.Contains(user.Id), userId == user.Id)" />
             }
         </tbody>
     </table>
 </div>
+
+@section Scripts {
+    <script src="~/js/rolemanagement.js"></script>
+}

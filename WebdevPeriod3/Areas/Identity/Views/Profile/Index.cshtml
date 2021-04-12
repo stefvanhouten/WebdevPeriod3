@@ -61,10 +61,12 @@
                         <ul class="list-inside space-y-2">
                             @foreach (var product in Model.OwnProducts)
                             {
-                                <li>
-                                    <div class="text-teal-600">@product.Name</div>
-                                    <div class="text-gray-500 text-xs">@product.CreatedAt.ToString("d-M-yyyy")</div>
-                                </li>
+                                <a asp-area="" asp-controller="Dashboard" asp-action="ViewPost" asp-route-ID=@product.Id>
+                                    <li>
+                                        <div class="text-teal-600">@product.Name</div>
+                                        <div class="text-gray-500 text-xs">@product.CreatedAt.ToString("d-M-yyyy")</div>
+                                    </li>
+                                </a>
                             }
                         </ul>
                     </div>

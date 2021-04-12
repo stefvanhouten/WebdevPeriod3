@@ -16,27 +16,28 @@ namespace WebdevPeriod3.Controllers
 {
     public class DashboardController : Controller
     {
-
         private readonly UserManager<User> _userManager;
         private readonly ProductRepository _productRepository;
         private readonly DapperProductStore _dapperProductStore;
+        private readonly DapperCommentStore _dapperCommentStore;
 
-
-        public DashboardController(UserManager<User> userManager, ProductRepository productRepository, DapperProductStore dapperProductStore)
+        public DashboardController(UserManager<User> userManager, ProductRepository productRepository, DapperProductStore dapperProductStore, DapperCommentStore dapperCommentStore)
         {
             _userManager = userManager;
             _productRepository = productRepository;
             _dapperProductStore = dapperProductStore;
+            _dapperCommentStore = dapperCommentStore;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm)
         {
-            var leProducts = await _productRepository.GetAllProductsInCatalog();
+            var leProducts = await (string.IsNullOrEmpty(searchTerm)
+                ? _productRepository.GetAllProductsInCatalog()
+                : _productRepository.FindProductsInCatalogBySearchTerm(searchTerm));
 
-            List<Product> productPosts = leProducts.ToList();
+            var productPosts = leProducts.ToList();
 
-
-            DashboardViewModel viewModel = new DashboardViewModel()
+            var viewModel = new DashboardViewModel()
             {
                 ProductPosts = productPosts
             };
@@ -54,7 +55,26 @@ namespace WebdevPeriod3.Controllers
             var product = result?.product;
             var subProducts = result?.subProducts;
 
-            return View(new PostViewModel(product, subProducts));
+            var groupedCommentData = result?.comments.GroupBy(comment => comment.ParentId);
+            var topLevelCommentData = groupedCommentData.SingleOrDefault(group => group.Key == null)
+                ?? Enumerable.Empty<HydratedComment>();
+
+            var commentDataDictionary = groupedCommentData
+                .Where(group => group.Key != null)
+                .ToDictionary(group => group.Key, group => group.AsEnumerable());
+
+            CommentViewModel CreateCommentViewModel(HydratedComment commentData) =>
+                new(
+                    commentData.Id,
+                    commentData.PosterName,
+                    commentData.Content,
+                    commentDataDictionary
+                    .GetValueOrDefault(commentData.Id, Enumerable.Empty<HydratedComment>())
+                    .Select(CreateCommentViewModel));
+
+            var comments = topLevelCommentData.Select(CreateCommentViewModel);
+
+            return View(new PostViewModel(product, subProducts, comments));
         }
 
         public async Task<IActionResult> Image(string id)
@@ -67,13 +87,13 @@ namespace WebdevPeriod3.Controllers
             return File(image, "image/png");
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateProduct()
         {
             return View(new ProductDto());
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductDto dto)
         {
@@ -115,6 +135,26 @@ namespace WebdevPeriod3.Controllers
 
                 return memoryStream.ToArray();
             }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddComment(string id, [FromForm] CommentDto commentDto)
+        {
+            var posterId = _userManager.GetUserId(User);
+
+            await _dapperCommentStore.AddComment(commentDto.Content, id, commentDto.ParentId, posterId);
+
+            return RedirectToAction(nameof(ViewPost), new { id });
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> FlagComment([FromRoute] string id, [FromForm] FlagCommentDto flagCommentDto)
+        {
+            await _dapperCommentStore.FlagComment(flagCommentDto.Id);
+
+            return RedirectToAction(nameof(ViewPost), new { id });
         }
     }
 }
